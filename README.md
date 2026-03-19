@@ -1,3 +1,4 @@
+![Coveer Banner](./Assets/Cover.png)
 # 🛡️ Coveer
 
 ***Insurance that works as fast as you do.***

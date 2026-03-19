@@ -344,7 +344,7 @@ Each user has a **trust score**:
 
 **Frontend**
 
-* React / Next.js
+* React.js
 
 **Backend**
 

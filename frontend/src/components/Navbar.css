@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap');
+
+/* ── Outer wrapper: positions the pill at top-center ── */
+.navbar-wrapper {
+  position: fixed;
+  top: 1.25rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+  animation: navFadeIn 0.6s ease both;
+}
+
+@keyframes navFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+/* ── The pill itself ── */
+.navbar {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(18, 18, 22, 0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9999px;
+  padding: 0.45rem 0.45rem 0.45rem 0.45rem;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.45),
+    0 1px 0px rgba(255,255,255,0.04) inset;
+  /* no overflow: hidden here */
+}
+
+/* ── Logo block ── */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.45rem 1.1rem;
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+.navbar-logo-text {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  background: linear-gradient(100deg, #a8aacc 0%, #7b79c4 40%, #5a57b0 75%, #9092c8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Nav links ── */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-link {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+  display: inline-block;
+  height: 2rem;
+  line-height: 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.navbar-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar-link-inner {
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-link:hover .navbar-link-inner {
+  transform: translateY(-2rem);
+}
+
+.navbar-link-top {
+  display: block;
+  height: 2rem;
+  color: rgba(255, 255, 255, 0.38);
+  white-space: nowrap;
+}
+
+.navbar-link-bottom {
+  display: block;
+  height: 2rem;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+/* ── CTA button ── */
+.navbar-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 1.25rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0a0a;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, transform 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-cta:hover {
+  background: #ffffff;
+  /* transform: translateY(-1px); */
+}
+
+.navbar-cta-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* === ARROW SWAP on navbar-cta === */
+.navbar-cta-arrow-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-cta:hover .navbar-cta-arrow-wrap {
+  transform: translateX(5px);
+}
+
+.navbar-cta-arrow-enter {
+  position: absolute;
+  top: 50%;
+  left: 1.25rem;
+  transform: translateY(-50%) translateX(-14px);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-cta:hover .navbar-cta-arrow-enter {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0px);
+}
+
+.navbar-cta-arrow-exit {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-cta:hover .navbar-cta-arrow-exit {
+  opacity: 0;
+  transform: translateX(14px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-logo {
+    margin-right: 0.75rem;
+  }
+}

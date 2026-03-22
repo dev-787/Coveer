@@ -249,6 +249,11 @@
   animation: floatB 8s ease-in-out infinite;
 }
 
+/* Link styling for navigation */
+.cta-container a {
+  text-decoration: none;
+}
+
 .corner-bottom-left {
   bottom: -30px;
   left: -20px;

@@ -121,6 +121,12 @@
   white-space: nowrap;
 }
 
+/* ── CTA link wrapper ── */
+.navbar-cta-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
 /* ── CTA button ── */
 .navbar-cta {
   display: flex;
@@ -198,6 +204,10 @@
   .navbar-links {
     display: none;
   }
+
+.navbar-cta-link {
+  text-decoration: none;
+}
 
   .navbar-logo {
     margin-right: 0.75rem;

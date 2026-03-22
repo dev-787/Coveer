@@ -1,4 +1,5 @@
 import { ArrowRight, Wrench, UserCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './Hero.css';
 import { PlatformStrip } from './PlatformStrip';
 import img1 from '../assets/1.png';
@@ -34,22 +35,26 @@ export function Hero() {
       </p>
 
       <div className="cta-container">
-        <button className="btn btn-primary">
-          <span className="btn-arrow-enter">
-            <ArrowRight className="btn-icon" />
-          </span>
-          <span className="btn-arrow-wrap">
-            <span className="btn-arrow-exit">
+        <Link to="/auth">
+          <button className="btn btn-primary">
+            <span className="btn-arrow-enter">
               <ArrowRight className="btn-icon" />
             </span>
-            Get Protected
-          </span>
-        </button>
+            <span className="btn-arrow-wrap">
+              <span className="btn-arrow-exit">
+                <ArrowRight className="btn-icon" />
+              </span>
+              Get Protected
+            </span>
+          </button>
+        </Link>
 
-        <button className="btn btn-secondary">
-          <UserCircle className="btn-icon icon-light" />
-          Create Account
-        </button>
+        <Link to="/auth">
+          <button className="btn btn-secondary">
+            <UserCircle className="btn-icon icon-light" />
+            Create Account
+          </button>
+        </Link>
       </div>
 
       {/* Platform trust strip — sits at bottom of hero viewport */}

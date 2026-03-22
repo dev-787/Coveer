@@ -1,0 +1,330 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.start-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.start-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(79, 77, 148, 0.14) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Card ── */
+.start-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: startFadeIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes startFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Brand ── */
+.start-brand {
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: startFadeIn 0.55s 0.05s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-brand-sub {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.1rem;
+}
+
+.start-brand-name {
+  font-size: 2.75rem;
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  background: linear-gradient(100deg, #a8aacc 0%, #7b79c4 40%, #5a57b0 75%, #9092c8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Form ── */
+.start-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: startFadeIn 0.55s 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.start-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.75rem 1.25rem;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.start-input-wrap.focused {
+  border-color: rgba(149, 153, 189, 0.45);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.start-input-icon {
+  width: 1rem;
+  height: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.start-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.01em;
+}
+
+.start-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.start-field-hint {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.22);
+  padding-left: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Primary button (arrow swap) ── */
+.start-btn-primary {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  color: #0a0a0a;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.85rem 1.875rem;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.start-btn-primary:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px 4px rgba(200, 200, 220, 0.12);
+}
+
+.start-btn-primary:active {
+  transform: scale(0.97);
+}
+
+.start-btn-arrow-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.start-btn-primary:hover .start-btn-arrow-wrap {
+  transform: translateX(6px);
+}
+
+.start-btn-arrow-enter {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 4.3rem); /* adjust this value to sit just before your text */
+  transform: translateY(-50%) translateX(-16px);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.start-btn-primary:hover .start-btn-arrow-enter {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0px);
+}
+
+.start-btn-arrow-exit {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.start-btn-primary:hover .start-btn-arrow-exit {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+.start-btn-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* ── Divider ── */
+.start-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 1.5rem 0 1rem;
+  animation: startFadeIn 0.55s 0.15s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.start-divider-text {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.28);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ── Google button ── */
+.start-btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9999px;
+  padding: 0.8rem 1.5rem;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  animation: startFadeIn 0.55s 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-btn-google:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.start-btn-google:active {
+  transform: scale(0.97);
+}
+
+.start-google-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── Separator ── */
+.start-separator {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 1.5rem 0 1.25rem;
+  animation: startFadeIn 0.55s 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ── Bottom link ── */
+.start-link-btn {
+  background: transparent;
+  border: none;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  animation: startFadeIn 0.55s 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-link-btn:hover {
+  color: #ffffff;
+}
+
+.start-footnote {
+  margin-top: 0.65rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  animation: startFadeIn 0.55s 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.start-footnote:hover {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .start-card {
+    max-width: 100%;
+  }
+
+  .start-brand-name {
+    font-size: 2.1rem;
+  }
+}

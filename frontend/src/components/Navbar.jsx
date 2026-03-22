@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 export function Navbar() {
@@ -26,20 +27,22 @@ export function Navbar() {
         </ul>
 
         {/* CTA */}
-        <button className="navbar-cta">
-          {/* Arrow entering from left */}
-          <span className="navbar-cta-arrow-enter">
-            <ArrowRight className="navbar-cta-icon" />
-          </span>
-
-          {/* Text + arrow exiting right */}
-          <span className="navbar-cta-arrow-wrap">
-            <span className="navbar-cta-arrow-exit">
+        <Link to="/auth" className="navbar-cta-link">
+          <button className="navbar-cta">
+            {/* Arrow entering from left */}
+            <span className="navbar-cta-arrow-enter">
               <ArrowRight className="navbar-cta-icon" />
             </span>
+
+            {/* Text + arrow exiting right */}
+            <span className="navbar-cta-arrow-wrap">
+              <span className="navbar-cta-arrow-exit">
+                <ArrowRight className="navbar-cta-icon" />
+              </span>
             Get Started
           </span>
-        </button>
+          </button>
+        </Link>
 
       </div>
     </nav>

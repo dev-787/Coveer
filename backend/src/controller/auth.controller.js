@@ -2,76 +2,85 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-async function registerUser(req,res) {
+async function registerUser(req, res) {
+  try {
+    const { fullName, email, password, dob, platform, city, dailyEarnings, plan, autoRenew } = req.body;
 
-
-    const {fullName:{
-        firstName,lastName
-    },email,password} = req.body;
-
-
-    const isUserAlreadyExist = await userModel.findOne({email})
-
-    if(isUserAlreadyExist){
-        return res.status(400).json({
-            message:"User already exist"
-        })
+    // Validate required fields
+    if (!email || !password || !fullName?.firstName || !fullName?.lastName || !dob || !platform || !city || dailyEarnings == null || !plan) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const hashedPassword = await bcrypt.hash(password,10)
+    const isUserAlreadyExist = await userModel.findOne({ email });
+    if (isUserAlreadyExist) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await userModel.create({
-        fullName:{
-            firstName,lastName
-        },email,password:hashedPassword
-    })
+      fullName: { firstName: fullName.firstName, lastName: fullName.lastName },
+      email,
+      password: hashedPassword,
+      dob,
+      platform,
+      city,
+      dailyEarnings: Number(dailyEarnings),
+      plan,
+      autoRenew: autoRenew ?? true,
+    });
 
-    const token = jwt.sign({
-        id:user._id
-    },process.env.JWT_SECRET)
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.cookie("token", token);
 
-    res.cookie("token",token)
-
-    res.status(200).json({
-        message:"User registered successful",
-        user:{
-            email:user.email,
-            _id:user._id,
-            fullName:user.fullName
-        }
-    })
+    return res.status(201).json({
+      message: "Registration successful",
+      userId: user._id,
+    });
+  } catch (err) {
+    // Handle mongoose duplicate key error
+    if (err.code === 11000) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+    console.error("Registration error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
-async function loginUser(req,res) {
-    const {email,password} = req.body;
 
-    const user = await userModel.findOne({
-        email
-    })
+async function loginUser(req, res) {
+  try {
+    const { email, password } = req.body;
 
-    if(!user){
-        return res.status(400).json({
-            message:"invalid email address"
-        });
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    const isPasswordValid = await bcrypt.compare(password,user.password)
-    if(!isPasswordValid) {
-        return res.status(400).json({message:"invalid email or password "})
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
 
-    res.cookie("token",token)
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.cookie("token", token);
 
-    res.status(200).json({
-        message:"user logged in sucessful",
-        user:{
-            email:user.email,
-            _id: user._id,
-            fullName:user.fullName
-        }
-    })
+    return res.status(200).json({
+      message: "Login successful",
+      user: {
+        _id:      user._id,
+        email:    user.email,
+        fullName: user.fullName,
+      },
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 module.exports = {

@@ -1,70 +1,109 @@
 import { useState } from 'react';
-import { Mail, ArrowRight, Chrome } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Login.css';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [focused, setFocused] = useState(false);
+  const [formData, setFormData]   = useState({ email: '', password: '' });
+  const [focused, setFocused]     = useState('');
+  const [error, setError]         = useState('');
+  const [loading, setLoading]     = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setError('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // handle login logic
+    if (!formData.email || !formData.password) {
+      setError('Please enter your email and password.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axios.post('http://localhost:3000/auth/login', {
+        email:    formData.email,
+        password: formData.password,
+      }, { withCredentials: true });
+
+      if (res.status === 200) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="auth-container">
-      {/* Ambient glow */}
       <div className="auth-glow" />
 
-      <div className="auth-card" style={{ animationDelay: '0s' }}>
+      <div className="auth-card">
 
-        {/* Brand */}
         <div className="auth-brand">
           <p className="auth-brand-sub">Log in to</p>
           <h1 className="auth-brand-name">Coveer</h1>
         </div>
 
-        {/* Email form */}
         <form className="auth-form" onSubmit={handleSubmit}>
-          <div className={`auth-input-wrap ${focused ? 'focused' : ''}`}>
+          {/* Email */}
+          <div className={`auth-input-wrap ${focused === 'email' ? 'focused' : ''}`}>
             <Mail className="auth-input-icon" />
             <input
               type="email"
-              placeholder="Enter your email..."
+              name="email"
+              placeholder="Email address"
               className="auth-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
-              required
+              value={formData.email}
+              onChange={handleChange}
+              onFocus={() => setFocused('email')}
+              onBlur={() => setFocused('')}
+              autoComplete="email"
             />
           </div>
 
-          <button type="submit" className="auth-btn-primary">
-            {/* Arrow enter */}
+          {/* Password */}
+          <div className={`auth-input-wrap ${focused === 'password' ? 'focused' : ''}`}>
+            <Lock className="auth-input-icon" />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="auth-input"
+              value={formData.password}
+              onChange={handleChange}
+              onFocus={() => setFocused('password')}
+              onBlur={() => setFocused('')}
+              autoComplete="current-password"
+            />
+          </div>
+
+          {error && <p className="auth-error">{error}</p>}
+
+          <button type="submit" className="auth-btn-primary" disabled={loading}>
             <span className="auth-btn-arrow-enter">
               <ArrowRight className="auth-btn-icon" />
             </span>
-            {/* Text + arrow exit */}
             <span className="auth-btn-arrow-wrap">
               <span className="auth-btn-arrow-exit">
                 <ArrowRight className="auth-btn-icon" />
               </span>
-              Log in with Email
+              {loading ? 'Logging in…' : 'Log in'}
             </span>
           </button>
         </form>
 
-        {/* Divider */}
         <div className="auth-divider">
           <span className="auth-divider-line" />
           <span className="auth-divider-text">Or continue with</span>
           <span className="auth-divider-line" />
         </div>
 
-        {/* Google */}
         <button className="auth-btn-google">
           <svg className="auth-google-icon" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -72,17 +111,12 @@ function Login() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Google
+          Continue with Google
         </button>
 
-        {/* Divider */}
         <div className="auth-separator" />
 
-        {/* Create account */}
-        <button
-          className="auth-link-btn"
-          onClick={() => navigate('/auth/start')}
-        >
+        <button className="auth-link-btn" onClick={() => navigate('/auth/start')}>
           Create Account
         </button>
 
@@ -92,4 +126,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;

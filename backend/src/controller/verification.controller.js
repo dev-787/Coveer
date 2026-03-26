@@ -69,6 +69,9 @@ async function updateVerificationStatus(req, res) {
     if (status === 'verified' || status === 'rejected') {
       update.verificationCompletedAt = new Date();
     }
+    if (status === 'verified') {
+      update.isVerified = true;
+    }
     if (status === 'rejected' && rejectionReason) {
       update.verificationRejectionReason = rejectionReason;
     }

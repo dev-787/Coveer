@@ -208,7 +208,7 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
       }, { withCredentials: true });
 
       if (response.status === 200 || response.status === 201) {
-        setSuccess(true);
+        navigate('/verify');
       }
     } catch (err) {
       setErrors({ submit: err.response?.data?.message || 'Registration failed. Please try again.' });

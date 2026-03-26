@@ -53,6 +53,20 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
 
+    // ── Verification ──────────────────────────────────────────────────────────
+    verificationStatus: {
+      type: String,
+      enum: ['pending', 'under_review', 'verified', 'rejected'],
+      default: 'pending',
+    },
+    verificationDocuments: {
+      identityProof: { type: String, default: null },
+      platformProof: { type: String, default: null },
+    },
+    verificationSubmittedAt:  { type: Date,   default: null },
+    verificationCompletedAt:  { type: Date,   default: null },
+    verificationRejectionReason: { type: String, default: null },
+
     // ── Trust & fraud ──────────────────────────────────────────────────────────
     trustScore: {
       type: Number,

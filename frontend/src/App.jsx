@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { Hero } from './components/Hero'
+import { HowItWorks } from './components/HowItWorks'
 import { Navbar } from './components/Navbar'
 import Login from './pages/Login'
 import Start from './pages/Start'
@@ -15,7 +16,7 @@ const Layout = () => {
     <>
       {!hideNav && <Navbar />}
       <Routes>
-        <Route path="/" element={<Hero />} />
+        <Route path="/" element={<><Hero /><HowItWorks /></>} />
         <Route path="/auth" element={<Login />} />
         <Route path="/auth/start" element={<Start />} />
         <Route path="/dashboard" element={<Dashboard />} />

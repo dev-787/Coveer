@@ -1,38 +1,49 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { Hero } from './components/Hero'
 import { HowItWorks } from './components/HowItWorks'
 import { Navbar } from './components/Navbar'
-import Login from './pages/Login'
-import Start from './pages/Start'
+import Login     from './pages/Login'
+import Start     from './pages/Start'
+import Verify    from './pages/Verify'
 import Dashboard from './pages/Dashboard'
-import Verify from './pages/Verify'
 
-const Layout = () => {
+const NAV_HIDDEN = ['/auth', '/auth/start', '/dashboard', '/verify'];
+
+function Layout() {
   const location = useLocation();
-  const hideNav = location.pathname === '/auth' || location.pathname === '/auth/start' || location.pathname === '/dashboard' || location.pathname === '/verify';
+  const { user, loading } = useAuth();
+  const hideNav = NAV_HIDDEN.includes(location.pathname);
+
+  if (loading) return (
+    <div className="db-loading-screen">
+      <div className="db-loading-spinner" />
+    </div>
+  );
 
   return (
     <>
       {!hideNav && <Navbar />}
       <Routes>
+        {/* Public */}
         <Route path="/" element={<><Hero /><HowItWorks /></>} />
-        <Route path="/auth" element={<Login />} />
-        <Route path="/auth/start" element={<Start />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/verify"    element={<Verify />} />
+        <Route path="/auth"       element={!user ? <Login />  : <Navigate to="/dashboard" replace />} />
+        <Route path="/auth/start" element={!user ? <Start />  : <Navigate to="/dashboard" replace />} />
+        <Route path="/verify"     element={<Verify />} />
+
+        {/* Protected */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute><Dashboard /></ProtectedRoute>
+        } />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
-};
-
-const App = () => {
-  return (
-    <Router>
-      <Layout />
-    </Router>
-  );
 }
 
-
-export default App
+export default function App() {
+  return <Layout />;
+}

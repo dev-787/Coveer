@@ -53,6 +53,35 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
 
+    // ── Wallet ─────────────────────────────────────────────────────────────────
+    wallet: {
+      balance:  { type: Number, default: 0, min: 0 },
+      upiId:    { type: String, default: null },
+      bankAccount: {
+        accountNumber: { type: String, default: null },
+        ifsc:          { type: String, default: null },
+        holderName:    { type: String, default: null },
+      },
+    },
+
+    // ── Plan status ────────────────────────────────────────────────────────────
+    planStatus:      { type: String, enum: ['active', 'inactive', 'expired'], default: 'inactive' },
+    planActivatedAt: { type: Date, default: null },
+    planExpiresAt:   { type: Date, default: null },
+
+    // ── Transactions ───────────────────────────────────────────────────────────
+    transactions: [
+      {
+        type:              { type: String, enum: ['credit', 'debit', 'payout', 'premium', 'withdrawal', 'refund'] },
+        amount:            Number,
+        reason:            String,
+        razorpayPaymentId: { type: String, default: null },
+        razorpayPayoutId:  { type: String, default: null },
+        status:            { type: String, enum: ['pending', 'success', 'failed'], default: 'success' },
+        createdAt:         { type: Date, default: Date.now },
+      }
+    ],
+
     // ── Verification ──────────────────────────────────────────────────────────
     verificationStatus: {
       type: String,

@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 function Login() {
-  const [formData, setFormData]   = useState({ email: '', password: '' });
-  const [focused, setFocused]     = useState('');
-  const [error, setError]         = useState('');
-  const [loading, setLoading]     = useState(false);
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [focused, setFocused]   = useState('');
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const navigate  = useNavigate();
+  const { setUser } = useAuth();
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -30,6 +32,9 @@ function Login() {
       }, { withCredentials: true });
 
       if (res.status === 200) {
+        // Fetch full user profile and update context so ProtectedRoute sees the user
+        const meRes = await axios.get('http://localhost:3000/auth/me', { withCredentials: true });
+        setUser(meRes.data);
         navigate('/dashboard');
       }
     } catch (err) {

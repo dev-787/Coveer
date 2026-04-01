@@ -1,18 +1,19 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 export function Navbar() {
+  const { user } = useAuth();
+
   return (
     <nav className="navbar-wrapper">
       <div className="navbar">
 
-        {/* Logo */}
         <div className="navbar-logo">
           <span className="navbar-logo-text">Coveer</span>
         </div>
 
-        {/* Nav links */}
         <ul className="navbar-links">
           {['Features', 'Pricing', 'Support'].map((label) => (
             <li key={label}>
@@ -26,21 +27,17 @@ export function Navbar() {
           ))}
         </ul>
 
-        {/* CTA */}
-        <Link to="/auth" className="navbar-cta-link">
+        <Link to={user ? '/dashboard' : '/auth'} className="navbar-cta-link">
           <button className="navbar-cta">
-            {/* Arrow entering from left */}
             <span className="navbar-cta-arrow-enter">
               <ArrowRight className="navbar-cta-icon" />
             </span>
-
-            {/* Text + arrow exiting right */}
             <span className="navbar-cta-arrow-wrap">
               <span className="navbar-cta-arrow-exit">
                 <ArrowRight className="navbar-cta-icon" />
               </span>
-            Get Started
-          </span>
+              {user ? 'Dashboard' : 'Get Started'}
+            </span>
           </button>
         </Link>
 

@@ -8,7 +8,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/auth/me', { withCredentials: true })
+    axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true })
       .then(res => setUser(res.data))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:3000/auth/logout', {}, { withCredentials: true });
+      await axios.post('https://coveer-backend.onrender.com/auth/logout', {}, { withCredentials: true });
     } catch (_) {}
     setUser(null);
   };

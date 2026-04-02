@@ -26,14 +26,14 @@ function Login() {
     }
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:3000/auth/login', {
+      const res = await axios.post('https://coveer-backend.onrender.com/auth/login', {
         email:    formData.email,
         password: formData.password,
       }, { withCredentials: true });
 
       if (res.status === 200) {
         // Fetch full user profile and update context so ProtectedRoute sees the user
-        const meRes = await axios.get('http://localhost:3000/auth/me', { withCredentials: true });
+        const meRes = await axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true });
         setUser(meRes.data);
         navigate('/dashboard');
       }

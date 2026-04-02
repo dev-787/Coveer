@@ -56,7 +56,7 @@ function PageDashboard({ user, weather, weatherLoading }) {
   const [txnLoading, setTxnLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/payments/wallet', { withCredentials: true })
+    axios.get('https://coveer-backend.onrender.com/payments/wallet', { withCredentials: true })
       .then(res => {
         const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
         const filtered = (res.data.transactions ?? [])
@@ -299,7 +299,7 @@ function PageWallet({ user }) {
   const [withdrawSuccess, setWithdrawSuccess] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/payments/wallet', { withCredentials: true })
+    axios.get('https://coveer-backend.onrender.com/payments/wallet', { withCredentials: true })
       .then(res => {
         setWalletData(res.data);
         setWalletBalance(res.data.balance);
@@ -314,7 +314,7 @@ function PageWallet({ user }) {
     if (!addAmount || Number(addAmount) < 25) return;
     try {
       const orderRes = await axios.post(
-        'http://localhost:3000/payments/add-funds/order',
+        'https://coveer-backend.onrender.com/payments/add-funds/order',
         { amount: Number(addAmount) },
         { withCredentials: true }
       );
@@ -330,7 +330,7 @@ function PageWallet({ user }) {
         handler: async (response) => {
           try {
             const verifyRes = await axios.post(
-              'http://localhost:3000/payments/add-funds/verify',
+              'https://coveer-backend.onrender.com/payments/add-funds/verify',
               {
                 razorpay_order_id:   response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
@@ -376,7 +376,7 @@ function PageWallet({ user }) {
   // ── Activate plan ───────────────────────────────────────────────────────────
   const handleActivatePlan = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/payments/activate-plan', {}, { withCredentials: true });
+      const res = await axios.post('https://coveer-backend.onrender.com/payments/activate-plan', {}, { withCredentials: true });
       setPlanStatus('active');
       setWalletBalance(res.data.newBalance);
       setWalletData(prev => prev ? { ...prev, planStatus: 'active', balance: res.data.newBalance } : prev);
@@ -390,7 +390,7 @@ function PageWallet({ user }) {
     if (!withdrawAmount || Number(withdrawAmount) < 10 || !upiId) return;
     try {
       const res = await axios.post(
-        'http://localhost:3000/payments/withdraw',
+        'https://coveer-backend.onrender.com/payments/withdraw',
         { amount: Number(withdrawAmount), upiId },
         { withCredentials: true }
       );
@@ -831,7 +831,7 @@ function PageSettings({ user }) {
     setPlanLoading(true);
     setPlanMsg('');
     try {
-      await axios.patch('http://localhost:3000/auth/update-plan', { plan: planId }, { withCredentials: true });
+      await axios.patch('https://coveer-backend.onrender.com/auth/update-plan', { plan: planId }, { withCredentials: true });
       // Update AuthContext so the whole app reflects the new plan immediately
       setUser(prev => prev ? { ...prev, plan: planId } : prev);
       setPlanMsgType('success');
@@ -936,7 +936,7 @@ export default function Dashboard() {
   const [bellOpen, setBellOpen]           = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/weather/current', { withCredentials: true })
+    axios.get('https://coveer-backend.onrender.com/weather/current', { withCredentials: true })
       .then(res => setWeather(res.data))
       .catch(err => console.error('Weather fetch failed:', err))
       .finally(() => setWeatherLoading(false));
@@ -945,7 +945,7 @@ export default function Dashboard() {
   // Fetch notifications on mount and poll every 60s
   useEffect(() => {
     const fetchNotifs = () => {
-      axios.get('http://localhost:3000/notifications', { withCredentials: true })
+      axios.get('https://coveer-backend.onrender.com/notifications', { withCredentials: true })
         .then(res => {
           setNotifications(res.data.notifications);
           setUnreadCount(res.data.unreadCount);
@@ -961,7 +961,7 @@ export default function Dashboard() {
     setBellOpen(v => !v);
     if (!bellOpen && unreadCount > 0) {
       // Mark all read
-      await axios.patch('http://localhost:3000/notifications/read-all', {}, { withCredentials: true }).catch(() => {});
+      await axios.patch('https://coveer-backend.onrender.com/notifications/read-all', {}, { withCredentials: true }).catch(() => {});
       setUnreadCount(0);
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     }

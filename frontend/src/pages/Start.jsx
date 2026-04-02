@@ -195,7 +195,7 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', {
+      const response = await axios.post('https://coveer-backend.onrender.com/auth/register', {
         email:         formData.email,
         password:      formData.password,
         fullName:      { firstName: formData.firstName, lastName: formData.lastName },

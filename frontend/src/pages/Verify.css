@@ -351,3 +351,19 @@
     font-size: 2rem;
   }
 }
+
+/* ── Skip button ── */
+.vf-btn-skip {
+  background: none;
+  border: none;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.vf-btn-skip:hover {
+  color: rgba(255, 255, 255, 0.5);
+}

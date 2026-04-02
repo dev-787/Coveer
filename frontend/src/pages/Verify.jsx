@@ -54,7 +54,7 @@ const PendingScreen = ({ onRejected }) => {
   useEffect(() => {
     const poll = setInterval(async () => {
       try {
-        const res = await axios.get('http://localhost:3000/verify/status', { withCredentials: true });
+        const res = await axios.get('https://coveer-backend.onrender.com/verify/status', { withCredentials: true });
         const s = res.data.status;
         setStatus(s);
         if (s === 'verified') {
@@ -125,7 +125,7 @@ function Verify() {
       form.append('identityProof', files.identityProof);
       form.append('platformProof', files.platformProof);
 
-      await axios.post('http://localhost:3000/verify/upload', form, {
+      await axios.post('https://coveer-backend.onrender.com/verify/upload', form, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -188,6 +188,11 @@ function Verify() {
                 <span className="vf-btn-arrow-exit"><ArrowRight size={15} /></span>
                 {loading ? 'Uploading…' : 'Submit Documents'}
               </span>
+            </button>
+
+            <button type="button" className="vf-btn-skip"
+              onClick={() => window.location.href = '/dashboard'}>
+              Verify later
             </button>
           </form>
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight, Mail, Lock, User, Calendar, Briefcase, MapPin, IndianRupee, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 import './Start.css';
 
 // ── Constants — single source of truth ────────────────────────────────────────
@@ -165,6 +166,7 @@ const Start = () => {
   });
 
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
  const handleChange = (e) => {
   const { name, value, type, checked } = e.target;
@@ -208,6 +210,9 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
       }, { withCredentials: true });
 
       if (response.status === 200 || response.status === 201) {
+        // Fetch full user and set in context so ProtectedRoute works immediately
+        const meRes = await axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true });
+        setUser(meRes.data);
         navigate('/verify');
       }
     } catch (err) {

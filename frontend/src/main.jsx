@@ -19,7 +19,14 @@ createRoot(document.getElementById('root')).render(
             autoClose={6000}
             hideProgressBar={false}
             theme="dark"
-            toastStyle={{ background: '#16161e', border: '1px solid rgba(123,121,196,0.25)', fontFamily: 'Bricolage Grotesque, sans-serif' }}
+            toastStyle={{
+              background: '#16161e',
+              border: '1px solid rgba(123,121,196,0.35)',
+              color: '#f0f0f2',
+              fontFamily: 'Bricolage Grotesque, sans-serif',
+              fontSize: '0.85rem',
+            }}
+            progressStyle={{ background: 'linear-gradient(90deg, #5a57b0, #a8aacc)' }}
           />
         </LanguageProvider>
       </AuthProvider>

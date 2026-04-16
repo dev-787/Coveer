@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap');
+
+/* ── Section ──────────────────────────────────────────────────────────────────*/
+.sp-section {
+  position: relative;
+  background: #0a0a0a;
+  padding: 8rem 8vw;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  overflow: hidden;
+}
+
+/* ── Headline ─────────────────────────────────────────────────────────────────*/
+.sp-headline {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #f0f0f2;
+  line-height: 1.08;
+  text-align: center;
+  margin-bottom: 1.1rem;
+}
+
+.sp-gradient {
+  background: linear-gradient(100deg,
+    #a8aacc 0%, #7b79c4 40%, #5a57b0 75%, #9092c8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: spShimmer 5s linear infinite;
+}
+
+@keyframes spShimmer {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 200% center; }
+}
+
+.sp-sub {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin-bottom: 5rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Grid ─────────────────────────────────────────────────────────────────────*/
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Card stack ───────────────────────────────────────────────────────────────*/
+.sp-card-stack {
+  position: relative;
+  cursor: pointer;
+  /* entry animation */
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sp-visible .sp-card-stack:nth-child(1) { transition-delay: 0.05s; }
+.sp-visible .sp-card-stack:nth-child(2) { transition-delay: 0.15s; }
+.sp-visible .sp-card-stack:nth-child(3) { transition-delay: 0.25s; }
+
+.sp-visible .sp-card-stack {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Bottom accent card ───────────────────────────────────────────────────────*/
+.sp-card-bottom {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  height: 48px;
+  background: rgba(90, 87, 176, 0.18);
+  border: 1.5px solid rgba(123, 121, 196, 0.55);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.sp-card-bottom-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+
+.sp-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  color: rgba(168, 170, 204, 0.9);
+  letter-spacing: 0.02em;
+}
+
+/* ── Main top card ────────────────────────────────────────────────────────────*/
+.sp-card-top {
+  position: relative;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(90, 87, 176, 0.22) 0%, transparent 55%),
+    #111116;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 2rem;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s ease,
+    border-color 0.3s ease;
+}
+
+/* inner top highlight */
+.sp-card-top::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(123, 121, 196, 0.3),
+    transparent);
+}
+
+/* ── Icon box ─────────────────────────────────────────────────────────────────*/
+.sp-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(123, 121, 196, 0.12);
+  border: 1px solid rgba(123, 121, 196, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: #a8aacc;
+}
+
+/* ── Card text ────────────────────────────────────────────────────────────────*/
+.sp-card-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.5rem;
+}
+
+.sp-card-desc {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* ── CTA button ───────────────────────────────────────────────────────────────*/
+.sp-card-btn {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.sp-card-btn:hover {
+  background: rgba(123, 121, 196, 0.1);
+  border-color: rgba(123, 121, 196, 0.3);
+  color: rgba(168, 170, 204, 0.9);
+}
+
+/* ── Hover state ──────────────────────────────────────────────────────────────*/
+.sp-card-stack:hover .sp-card-top,
+.sp-active .sp-card-top {
+  transform: translateY(-29px);
+  transform: translateY(-29px);
+  border-color: rgba(123, 121, 196, 0.25);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.sp-card-stack:hover .sp-card-bottom,
+.sp-active .sp-card-bottom {
+  bottom: -10px;
+  height: 52px;
+  background: rgba(90, 87, 176, 0.22);
+  border-color: rgba(123, 121, 196, 0.7);
+  box-shadow: 0 0 20px rgba(90, 87, 176, 0.2);
+}
+
+.sp-card-stack:hover .sp-card-bottom-content,
+.sp-active .sp-card-bottom-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────*/
+@media (max-width: 900px) {
+  .sp-section {
+    padding: 5rem 5vw;
+  }
+
+  .sp-headline {
+    font-size: clamp(2.1rem, 9vw, 3.5rem);
+  }
+
+  .sp-sub {
+    margin-bottom: 3rem;
+  }
+
+  .sp-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

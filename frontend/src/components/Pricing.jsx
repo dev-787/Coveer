@@ -31,7 +31,7 @@ function calcPlan(earnings, type) {
 
 const BASIC_FEATURES = [
   'Weather & AQI protection',
-  'Daily 10 PM automatic payout',
+  'Hourly automatic payout',
   'Hourly disruption tracking',
   'UPI withdrawal anytime',
 ];
@@ -132,8 +132,8 @@ export function Pricing() {
             </div>
             <div className="pr-stat-divider" />
             <div className="pr-stat">
-              <span className="pr-stat-value">10 PM</span>
-              <span className="pr-stat-label">Daily payout</span>
+              <span className="pr-stat-value">Hourly</span>
+              <span className="pr-stat-label">Payout</span>
             </div>
             <div className="pr-stat-divider" />
             <div className="pr-stat">

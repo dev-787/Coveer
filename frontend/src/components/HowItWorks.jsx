@@ -54,10 +54,10 @@ const STEPS = [
   },
   {
     number: '04',
-    title: ['Money in your', 'wallet at 10 PM.'],
+    title: ['Money in your', 'wallet, hourly.'],
     gradientWords: ['Money'],
     description:
-      'At 10 PM every day, the settlement engine runs. Affected hours × hourly income = payout. Credited to your wallet instantly.',
+      'At the end of each affected hour, the settlement engine runs. Affected hours × hourly income = payout. Credited to your wallet instantly.',
     bullets: [
       'Daily automatic settlement',
       'Withdraw via UPI anytime',

@@ -33,7 +33,7 @@ const PLANS = [
     price: '₹25',
     period: '/week',
     maxPayout: '₹600/day',
-    features: ['Weather protection', 'AQI alerts', 'Daily 10 PM payout'],
+    features: ['Weather protection', 'AQI alerts', 'Hourly payout'],
   },
   {
     id: 'premium',

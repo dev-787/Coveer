@@ -5,7 +5,7 @@ import './WhySection.css';
 const COVEER_FEATURES = [
   'Zero claims — ever',
   'Hourly disruption tracking',
-  'Automatic 10 PM payout',
+  'Automatic hourly payout',
   'AI-verified identity system',
   'Fraud-protected wallet',
   '₹25/week — less than a chai a day',

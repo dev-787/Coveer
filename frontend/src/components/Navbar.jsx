@@ -1,13 +1,26 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useEffect, useRef, useState } from 'react';
 import './Navbar.css';
 
 export function Navbar() {
   const { user } = useAuth();
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > lastY.current && y > 80);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav className="navbar-wrapper">
+    <nav className={`navbar-wrapper ${hidden ? 'navbar-wrapper--hidden' : ''}`}>
       <div className="navbar">
 
         <div className="navbar-logo">

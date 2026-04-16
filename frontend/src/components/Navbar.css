@@ -10,12 +10,15 @@
   justify-content: center;
   z-index: 100;
   pointer-events: none;
-  animation: navFadeIn 0.6s ease both;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
 }
 
-@keyframes navFadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0);     }
+.navbar-wrapper--hidden {
+  transform: translateY(-140%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ── The pill itself ── */

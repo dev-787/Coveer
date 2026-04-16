@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap');
+
+/* ── Section ──────────────────────────────────────────────────────────────────*/
+.ws-section {
+  position: relative;
+  background: #0a0a0a;
+  padding: 8rem 8vw;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  overflow: hidden;
+}
+
+/* Ambient glow — disabled */
+.ws-glow { display: none; }
+
+/* ── Headline ─────────────────────────────────────────────────────────────────*/
+.ws-headline {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #f0f0f2;
+  line-height: 1.08;
+  text-align: center;
+  margin-bottom: 1.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ws-gradient {
+  background: linear-gradient(100deg,
+    #a8aacc 0%, #7b79c4 40%, #5a57b0 75%, #9092c8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: wsShimmer 5s linear infinite;
+}
+
+@keyframes wsShimmer {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 200% center; }
+}
+
+.ws-sub {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.01em;
+}
+
+/* ── Cards wrapper ────────────────────────────────────────────────────────────*/
+.ws-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  align-items: stretch;
+  max-width: 1020px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Individual card ──────────────────────────────────────────────────────────*/
+.ws-card {
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition:
+    opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* LEFT — Coveer: dark with gradient border bright at top & bottom */
+.ws-card--left {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(90, 87, 176, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(90, 87, 176, 0.13) 0%, transparent 40%),
+    #0d0d10;
+  border: none;
+  transform: translateX(-28px);
+  position: relative;
+}
+
+.ws-card--left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(123, 121, 196, 0.7) 0%,
+    rgba(123, 121, 196, 0.12) 30%,
+    rgba(123, 121, 196, 0.12) 70%,
+    rgba(123, 121, 196, 0.7) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* RIGHT — Others: very dark, muted border */
+.ws-card--right {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transform: translateX(28px);
+}
+
+/* Animate in */
+.ws-visible .ws-card {
+  opacity: 1;
+  transform: translateX(0);
+}
+.ws-visible .ws-card--right {
+  transition-delay: 0.08s;
+}
+
+/* ── Card header ──────────────────────────────────────────────────────────────*/
+.ws-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2.25rem 1.75rem;
+}
+
+.ws-card-header--center {
+  justify-content: center;
+}
+
+/* Icon box — rounded square like reference */
+.ws-icon-box {
+  display: none;
+}
+
+.ws-brand {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(100deg, #a8aacc 0%, #7b79c4 40%, #5a57b0 75%, #9092c8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: wsShimmer 5s linear infinite;
+}
+
+.ws-others {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────────*/
+.ws-divider {
+  height: 1px;
+  margin: 0 2.25rem;
+}
+
+.ws-card--left .ws-divider {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(123, 121, 196, 0.4) 30%,
+    rgba(123, 121, 196, 0.4) 70%,
+    transparent 100%);
+}
+
+.ws-card--right .ws-divider {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Feature list ─────────────────────────────────────────────────────────────*/
+.ws-list {
+  list-style: none;
+  margin: 0;
+  padding: 2rem 2.25rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+/* ── Single item ──────────────────────────────────────────────────────────────*/
+.ws-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+  transition-delay: calc(0.35s + var(--i, 0) * 0.12s);
+}
+
+.ws-visible .ws-item {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Check pops in with a scale after the row appears */
+.ws-check {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6b68c4 0%, #4f4da0 100%);
+  border-radius: 50%;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(90, 87, 176, 0.55);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(0.55s + var(--i, 0) * 0.12s);
+}
+
+.ws-visible .ws-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ws-item-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.ws-item--dim .ws-item-text {
+  color: rgba(255, 255, 255, 0.3);
+}
+.ws-circle {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+/* ── V/S badge with circuit connector ────────────────────────────────────────*/
+.ws-vs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 2.25rem;
+  position: relative;
+  z-index: 5;
+}
+
+.ws-vs::before,
+.ws-vs::after { display: none; }
+
+.ws-vs-badge {
+  width: 80px;
+  height: 44px;
+  border-radius: 999px;
+  background: #0e0e14;
+  border: 1.5px solid rgba(123, 121, 196, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(200, 200, 230, 0.85);
+  box-shadow:
+    0 0 18px rgba(90, 87, 176, 0.25),
+    inset 0 1px 0 rgba(168, 170, 204, 0.1);
+  flex-shrink: 0;
+}
+
+.ws-vs-svg {
+  width: 80px;
+  height: 56px;
+  margin-top: -1px;
+  overflow: visible;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .ws-section {
+    padding: 5rem 5vw;
+  }
+
+  .ws-headline {
+    font-size: clamp(2.1rem, 9vw, 3.5rem);
+  }
+
+  .ws-sub {
+    margin-bottom: 3rem;
+  }
+
+  .ws-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+  }
+
+  .ws-card--left  { border-radius: 20px 20px 0 0; }
+  .ws-card--right { border-radius: 0 0 20px 20px; }
+
+  .ws-vs {
+    flex-direction: row;
+    padding: 0.75rem 0;
+    background: #0a0a0a;
+    border-left: 1px solid rgba(123, 121, 196, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .ws-vs-svg { display: none; }
+
+  .ws-card {
+    transform: none;
+    opacity: 0;
+  }
+
+  .ws-visible .ws-card {
+    opacity: 1;
+  }
+}

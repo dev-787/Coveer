@@ -3,8 +3,7 @@
 .hero-container {
   min-height: 100vh;
   height: 100vh;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
   background-color: #0a0a0a;
   display: flex;
   flex-direction: column;
@@ -14,6 +13,7 @@
   overflow: hidden;
   position: relative;
   font-family: 'Bricolage Grotesque', sans-serif;
+  box-sizing: border-box;
 }
 
 /* Ambient radial glow behind content */
@@ -172,7 +172,7 @@
 }
 
 .btn-primary:hover .btn-arrow-wrap {
-  transform: translateX(6px);
+  transform: translateX(3px);
 }
 
 .btn-arrow-enter {
@@ -247,6 +247,11 @@
   opacity: 0.75;
   transform: rotate(8deg);
   animation: floatB 8s ease-in-out infinite;
+}
+
+/* Link styling for navigation */
+.cta-container a {
+  text-decoration: none;
 }
 
 .corner-bottom-left {

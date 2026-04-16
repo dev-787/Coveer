@@ -261,7 +261,7 @@
   background:
     radial-gradient(circle at 100% 100%, rgba(90, 87, 176, 0.28) 0%, transparent 55%),
     #0d0d10;
-  border-color: rgba(123, 121, 196, 0.25);
+  border: 1px solid rgba(123, 121, 196, 0.45);
   padding: 1.25rem 1.5rem;
   position: relative;
 }

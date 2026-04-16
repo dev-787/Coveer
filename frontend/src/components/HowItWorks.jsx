@@ -131,17 +131,18 @@ function Connector({ fromAlign }) {
 
 export function HowItWorks() {
   const stepRefs = useRef([]);
-  const [activeSteps, setActiveSteps] = useState([]);
+  const [activeSteps, setActiveSteps] = useState(() => STEPS.map(() => false));
 
   useEffect(() => {
     const handleScroll = () => {
       const windowH = window.innerHeight;
-      const active = stepRefs.current.map((el) => {
+      setActiveSteps(prev => prev.map((already, i) => {
+        if (already) return true; // never un-activate
+        const el = stepRefs.current[i];
         if (!el) return false;
         const rect = el.getBoundingClientRect();
-        return rect.top < windowH * 0.75 && rect.bottom > windowH * 0.25;
-      });
-      setActiveSteps(active);
+        return rect.top < windowH * 0.75;
+      }));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

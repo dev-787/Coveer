@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Hero } from './components/Hero'
 import { HowItWorks } from './components/HowItWorks'
 import { WhySection } from './components/WhySection'
+import { Pricing } from './components/Pricing'
 import { Navbar } from './components/Navbar'
 import Login     from './pages/Login'
 import Start     from './pages/Start'
@@ -28,7 +29,7 @@ function Layout() {
       {!hideNav && <Navbar />}
       <Routes>
         {/* Public */}
-        <Route path="/" element={<><Hero /><HowItWorks /><WhySection /></>} />
+        <Route path="/" element={<><Hero /><HowItWorks /><WhySection /><Pricing /></>} />
         <Route path="/auth"       element={!user ? <Login />  : <Navigate to="/dashboard" replace />} />
         <Route path="/auth/start" element={!user ? <Start />  : <Navigate to="/dashboard" replace />} />
         <Route path="/verify"     element={<Verify />} />

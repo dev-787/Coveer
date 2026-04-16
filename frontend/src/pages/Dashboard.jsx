@@ -924,7 +924,8 @@ function PageSettings({ user }) {
 // MAIN DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [active, setActive]               = useState('dashboard');
   const [sidebarOpen, setSidebarOpen]     = useState(false);
   const [weather, setWeather]             = useState(null);
@@ -1075,6 +1076,15 @@ export default function Dashboard() {
                 </>
               )}
             </div>
+
+            {/* Logout */}
+            <button
+              className="db-topbar-logout"
+              onClick={async () => { await logout(); navigate('/auth'); }}
+              title="Sign out"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
         </header>
         <div className="db-content">{pages[active]}</div>

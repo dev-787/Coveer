@@ -281,7 +281,8 @@
 }
 
 @media (max-width: 700px) {
-  .admin-grid-4, .admin-grid-2, .admin-grid-5 { grid-template-columns: 1fr; }
+  .admin-grid-4  { grid-template-columns: repeat(2, 1fr); }
+  .admin-grid-2, .admin-grid-5 { grid-template-columns: 1fr; }
   .admin-sidebar { display: none; }
 }
 

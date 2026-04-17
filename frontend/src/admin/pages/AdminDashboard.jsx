@@ -42,8 +42,8 @@ export default function AdminDashboard() {
       .then(([ov, ug, pt, wt, tp]) => {
         setOverview(ov.data);
         setUserGrowth(ug.data.map(d => ({ date: fmtDate(d.date), count: d.count })));
-        setPayoutTrend(pt.data.map(d => ({ date: fmtDate(d.date), amount: d.amount })));
-        setWeatherTrend(wt.data.map(d => ({ hour: `${d.hour}h`, impact: d.avgImpact })));
+        setPayoutTrend(pt.data.map(d => ({ date: fmtDate(d.date), amount: d.amount, count: d.count })));
+        setWeatherTrend(wt.data.map(d => ({ hour: d.hour, impact: d.avgImpact, cities: d.affectedCities })));
         setTodayPayouts(tp.data.list.slice(0, 10));
       })
       .catch(console.error)
@@ -89,8 +89,9 @@ export default function AdminDashboard() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} />
-              <YAxis stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} />
+              <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }}
+                tickFormatter={(v, i) => (i === 0 || i === 29 || i % 7 === 0) ? v : ''} />
+              <YAxis stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} allowDecimals={false} />
               <Tooltip content={<CustomTooltip />} />
               <Area type="monotone" dataKey="count" stroke="#7b79c4" fillOpacity={1} fill="url(#colorCount)" />
             </AreaChart>
@@ -102,8 +103,9 @@ export default function AdminDashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={payoutTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} />
-              <YAxis stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} />
+              <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }}
+                tickFormatter={(v, i) => (i === 0 || i === 29 || i % 7 === 0) ? v : ''} />
+              <YAxis stroke="rgba(255,255,255,0.2)" style={{ fontSize: 11 }} tickFormatter={v => `₹${v}`} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="amount" fill="#7b79c4" radius={[6, 6, 0, 0]} />
             </BarChart>

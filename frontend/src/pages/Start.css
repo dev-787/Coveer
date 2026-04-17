@@ -630,3 +630,100 @@
   max-width: 240px;
   justify-content: center;
 }
+
+/* ── Plan step — earnings input ───────────────────────────────────────────────*/
+.sf-plan-earnings-wrap {
+  margin-bottom: 1.25rem;
+}
+
+.sf-plan-earnings-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.5rem;
+}
+
+.sf-plan-earnings-range {
+  font-size: 0.7rem;
+  color: rgba(123,121,196,0.7);
+  letter-spacing: 0.02em;
+}
+
+.sf-plan-earnings-input-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 0 1rem;
+  transition: border-color 0.25s;
+}
+
+.sf-plan-earnings-input-wrap:focus-within {
+  border-color: rgba(123,121,196,0.5);
+}
+
+.sf-plan-earnings-input-wrap.error {
+  border-color: rgba(220,80,80,0.5);
+}
+
+.sf-plan-earnings-prefix,
+.sf-plan-earnings-suffix {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+.sf-plan-earnings-input {
+  flex: 1;
+  padding: 0.75rem 0.5rem !important;
+  border: none !important;
+  background: none !important;
+  font-size: 1rem;
+}
+
+/* ── Plan payout inline pills ─────────────────────────────────────────────────*/
+.sf-plan-payouts {
+  display: flex;
+  align-items: stretch;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+}
+
+.sf-plan-payout-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  gap: 0.4rem;
+}
+
+.sf-plan-payout-sep {
+  width: 1px;
+  background: rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.sf-plan-payout-label {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.35);
+}
+
+.sf-plan-payout-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: -0.02em;
+  transition: color 0.25s;
+}
+
+.sf-plan-card.selected .sf-plan-payout-value {
+  color: #a8aacc;
+}

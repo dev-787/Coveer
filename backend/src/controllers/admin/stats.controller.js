@@ -72,6 +72,9 @@ exports.overview = async (req, res) => {
 
 exports.userGrowth = async (req, res) => {
   try {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
     const since = new Date();
     since.setDate(since.getDate() - 29);
     since.setHours(0, 0, 0, 0);
@@ -79,15 +82,18 @@ exports.userGrowth = async (req, res) => {
     const users = await User.find({ createdAt: { $gte: since }, isDeleted: { $ne: true } })
       .select('createdAt');
 
+    // Build map using LOCAL date string to avoid UTC day-shift
     const map = {};
     for (let i = 0; i < 30; i++) {
       const d = new Date(since);
       d.setDate(d.getDate() + i);
-      map[d.toISOString().slice(0, 10)] = 0;
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      map[key] = 0;
     }
 
     for (const u of users) {
-      const key = u.createdAt.toISOString().slice(0, 10);
+      const d = new Date(u.createdAt);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       if (map[key] !== undefined) map[key]++;
     }
 
@@ -111,19 +117,24 @@ exports.payoutTrend = async (req, res) => {
     for (let i = 0; i < 30; i++) {
       const d = new Date(since);
       d.setDate(d.getDate() + i);
-      map[d.toISOString().slice(0, 10)] = 0;
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      map[key] = { amount: 0, count: 0 };
     }
 
     for (const u of users) {
       for (const tx of u.transactions) {
         if (tx.type !== 'payout') continue;
         if (tx.createdAt < since) continue;
-        const key = tx.createdAt.toISOString().slice(0, 10);
-        if (map[key] !== undefined) map[key] += tx.amount || 0;
+        const d = new Date(tx.createdAt);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        if (map[key] !== undefined) {
+          map[key].amount += tx.amount || 0;
+          map[key].count++;
+        }
       }
     }
 
-    const data = Object.entries(map).map(([date, amount]) => ({ date, amount }));
+    const data = Object.entries(map).map(([date, { amount, count }]) => ({ date, amount, count }));
     return res.json(data);
   } catch (err) {
     console.error(err);
@@ -133,28 +144,34 @@ exports.payoutTrend = async (req, res) => {
 
 exports.weatherTrend = async (req, res) => {
   try {
+    const HourlyImpact = require('../../models/hourlyImpact.model');
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const all   = await CityWeather.find({ fetchedAt: { $gte: since } }).select('impactPercentage fetchedAt');
+    const all   = await HourlyImpact.find({ createdAt: { $gte: since } })
+      .select('impactPercentage isAffected createdAt city');
 
+    // Build 24-slot map keyed by hour (0–23)
     const map = {};
     for (let h = 0; h < 24; h++) {
-      const d = new Date(since);
-      d.setHours(d.getHours() + h);
-      map[d.getHours()] = { total: 0, count: 0 };
+      map[h] = { total: 0, count: 0, affectedCities: new Set() };
     }
 
     for (const w of all) {
-      const h = w.fetchedAt.getHours();
-      if (map[h]) {
-        map[h].total += w.impactPercentage || 0;
-        map[h].count++;
-      }
+      const h = new Date(w.createdAt).getHours();
+      map[h].total += w.impactPercentage || 0;
+      map[h].count++;
+      if (w.isAffected) map[h].affectedCities.add(w.city);
     }
 
-    const data = Object.entries(map).map(([hour, { total, count }]) => ({
-      hour: Number(hour),
-      avgImpact: count ? Math.round((total / count) * 100) / 100 : 0,
-    }));
+    const now = new Date();
+    const data = Array.from({ length: 24 }, (_, i) => {
+      const h = (now.getHours() - 23 + i + 24) % 24;
+      const slot = map[h];
+      return {
+        hour: `${String(h).padStart(2, '0')}:00`,
+        avgImpact: slot.count ? Math.round((slot.total / slot.count) * 10) / 10 : 0,
+        affectedCities: slot.affectedCities.size,
+      };
+    });
 
     return res.json(data);
   } catch (err) {

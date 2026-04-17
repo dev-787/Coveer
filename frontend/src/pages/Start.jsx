@@ -26,25 +26,31 @@ const CITIES = [
   'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Surat',
 ];
 
-const PLANS = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    price: '₹25',
-    period: '/week',
-    maxPayout: '₹600/day',
-    features: ['Weather protection', 'AQI alerts', 'Hourly payout'],
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    price: '₹40',
-    period: '/week',
-    maxPayout: '₹1,000/day',
-    features: ['Everything in Basic', 'Priority payouts', 'Curfew & disruption cover'],
-    recommended: true,
-  },
-];
+// ── Dynamic pricing (same logic as Pricing section) ───────────────────────────
+const EARN_MIN = 300;
+const EARN_MAX = 2000;
+
+function lerp(min, max, t) {
+  return Math.round(min + (max - min) * Math.min(Math.max(t, 0), 1));
+}
+
+function calcPlan(earnings, type) {
+  const e = Math.max(0, Number(earnings) || 0);
+  const t = e === 0 ? 0.5 : (e - EARN_MIN) / (EARN_MAX - EARN_MIN);
+  if (type === 'basic') {
+    const price     = e === 0 ? 25 : lerp(20, 30, t);
+    const maxPayout = e === 0 ? 600 : lerp(300, 600, t);
+    return { price, maxPayout, hourly: Math.round(maxPayout / 8) };
+  }
+  const price     = e === 0 ? 40 : lerp(40, 50, t);
+  const maxPayout = e === 0 ? 1000 : lerp(600, 1000, t);
+  return { price, maxPayout, hourly: Math.round(maxPayout / 8) };
+}
+
+const PLAN_FEATURES = {
+  basic:   ['Weather & AQI protection', 'Hourly automatic payout', 'UPI withdrawal anytime'],
+  premium: ['Everything in Basic', 'Priority payouts', 'Curfew & disruption cover', 'Higher payout cap'],
+};
 
 // ── Validation ─────────────────────────────────────────────────────────────────
 const validateStep = (step, formData) => {
@@ -72,8 +78,10 @@ const validateStep = (step, formData) => {
       errors.platform = 'Select your delivery platform';
     if (!formData.city)
       errors.city = 'Select your primary city';
-    if (!formData.dailyEarnings || isNaN(formData.dailyEarnings) || Number(formData.dailyEarnings) < 100)
-      errors.dailyEarnings = 'Enter average daily earnings (min ₹100)';
+    if (!formData.dailyEarnings || isNaN(formData.dailyEarnings) || Number(formData.dailyEarnings) < EARN_MIN)
+      errors.dailyEarnings = `Enter daily earnings between ₹${EARN_MIN} and ₹${EARN_MAX}`;
+    else if (Number(formData.dailyEarnings) > EARN_MAX)
+      errors.dailyEarnings = `We support earnings up to ₹${EARN_MAX}/day`;
   }
 
   if (step === 3) {
@@ -216,7 +224,13 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
         navigate('/verify');
       }
     } catch (err) {
-      setErrors({ submit: err.response?.data?.message || 'Registration failed. Please try again.' });
+      const msg = err.response?.data?.message || 'Registration failed. Please try again.';
+      if (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exist')) {
+        setStep(1);
+        setErrors({ email: 'This email is already registered. Please sign in instead.' });
+      } else {
+        setErrors({ submit: msg });
+      }
     } finally {
       setLoading(false);
     }
@@ -337,7 +351,7 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
               name="dailyEarnings"
               icon={IndianRupee}
               type="number"
-              placeholder="Avg. daily earnings (₹)"
+              placeholder={`Avg. daily earnings (₹${EARN_MIN}–₹${EARN_MAX})`}
               {...fieldProps}
             />
 
@@ -355,34 +369,48 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
           <form className="sf-form" onSubmit={handleSubmit}>
 
             <div className="sf-plans">
-              {PLANS.map(plan => (
-                <label
-                  key={plan.id}
-                  className={`sf-plan-card ${formData.plan === plan.id ? 'selected' : ''} ${plan.recommended ? 'recommended' : ''}`}
-                >
-                  <input
-                    type="radio"
-                    name="plan"
-                    value={plan.id}
-                    checked={formData.plan === plan.id}
-                    onChange={handleChange}
-                    className="sf-plan-radio"
-                  />
-                  {plan.recommended && <span className="sf-plan-badge">Recommended</span>}
-                  <div className="sf-plan-header">
-                    <span className="sf-plan-name">{plan.name}</span>
-                    <span className="sf-plan-price">
-                      {plan.price}<span className="sf-plan-period">{plan.period}</span>
-                    </span>
-                  </div>
-                  <p className="sf-plan-payout">Max payout: {plan.maxPayout}</p>
-                  <ul className="sf-plan-features">
-                    {plan.features.map(f => (
-                      <li key={f}><CheckCircle2 size={12} /> {f}</li>
-                    ))}
-                  </ul>
-                </label>
-              ))}
+              {['basic', 'premium'].map(planId => {
+                const calc = calcPlan(formData.dailyEarnings, planId);
+                const isRecommended = planId === 'premium';
+                return (
+                  <label
+                    key={planId}
+                    className={`sf-plan-card ${formData.plan === planId ? 'selected' : ''} ${isRecommended ? 'recommended' : ''}`}
+                  >
+                    <input
+                      type="radio"
+                      name="plan"
+                      value={planId}
+                      checked={formData.plan === planId}
+                      onChange={handleChange}
+                      className="sf-plan-radio"
+                    />
+                    {isRecommended && <span className="sf-plan-badge">Recommended</span>}
+                    <div className="sf-plan-header">
+                      <span className="sf-plan-name">{planId.charAt(0).toUpperCase() + planId.slice(1)}</span>
+                      <span className="sf-plan-price">
+                        ₹{calc.price}<span className="sf-plan-period">/week</span>
+                      </span>
+                    </div>
+                    <div className="sf-plan-payouts">
+                      <div className="sf-plan-payout-pill">
+                        <span className="sf-plan-payout-label">Max payout/day</span>
+                        <span className="sf-plan-payout-value">₹{calc.maxPayout}</span>
+                      </div>
+                      <div className="sf-plan-payout-sep" />
+                      <div className="sf-plan-payout-pill">
+                        <span className="sf-plan-payout-label">Payout/hour</span>
+                        <span className="sf-plan-payout-value">₹{calc.hourly}</span>
+                      </div>
+                    </div>
+                    <ul className="sf-plan-features">
+                      {PLAN_FEATURES[planId].map(f => (
+                        <li key={f}><CheckCircle2 size={12} /> {f}</li>
+                      ))}
+                    </ul>
+                  </label>
+                );
+              })}
             </div>
             {errors.plan && <p className="sf-error">{errors.plan}</p>}
 

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Cloud, IndianRupee, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Cloud, IndianRupee, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../context/AdminAuthContext';
 
@@ -15,12 +15,6 @@ const NAV = [
       { id: 'users',   label: 'Users',   icon: Users,        path: '/admin/users' },
       { id: 'weather', label: 'Weather', icon: Cloud,        path: '/admin/weather' },
       { id: 'payouts', label: 'Payouts', icon: IndianRupee,  path: '/admin/payouts' },
-    ],
-  },
-  {
-    section: 'System',
-    items: [
-      { id: 'settings', label: 'Settings', icon: Settings, path: null },
     ],
   },
 ];

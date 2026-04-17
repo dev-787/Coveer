@@ -8,21 +8,17 @@ import { Pricing } from './components/Pricing'
 import { Support } from './components/Support'
 import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
-import Login     from './pages/Login'
-import Start     from './pages/Start'
-import Verify    from './pages/Verify'
+import Login from './pages/Login'
+import Start from './pages/Start'
+import Verify from './pages/Verify'
 import Dashboard from './pages/Dashboard'
-import AdminLogin from './admin/pages/AdminLogin'
-import AdminLayout from './admin/components/AdminLayout'
-import { AdminAuthProvider } from './admin/context/AdminAuthContext'
-import { AdminProtectedRoute } from './admin/components/AdminProtectedRoute'
 
 const NAV_HIDDEN = ['/auth', '/auth/start', '/dashboard', '/verify'];
 
 function Layout() {
   const location = useLocation();
   const { user, loading } = useAuth();
-  const hideNav = NAV_HIDDEN.includes(location.pathname) || location.pathname.startsWith('/admin');
+  const hideNav = NAV_HIDDEN.includes(location.pathname);
 
   if (loading) return (
     <div className="db-loading-screen">
@@ -36,21 +32,13 @@ function Layout() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<><Hero /><HowItWorks /><WhySection /><Pricing /><Support /><Footer /></>} />
-        <Route path="/auth"       element={!user ? <Login />  : <Navigate to="/dashboard" replace />} />
-        <Route path="/auth/start" element={!user ? <Start />  : <Navigate to="/dashboard" replace />} />
-        <Route path="/verify"     element={<Verify />} />
+        <Route path="/auth" element={!user ? <Login /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/auth/start" element={!user ? <Start /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/verify" element={<Verify />} />
 
         {/* Protected */}
         <Route path="/dashboard" element={
           <ProtectedRoute><Dashboard /></ProtectedRoute>
-        } />
-
-        {/* Admin */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/*" element={
-          <AdminProtectedRoute>
-            <AdminLayout />
-          </AdminProtectedRoute>
         } />
 
         {/* Fallback */}
@@ -61,9 +49,5 @@ function Layout() {
 }
 
 export default function App() {
-  return (
-    <AdminAuthProvider>
-      <Layout />
-    </AdminAuthProvider>
-  );
+  return <Layout />;
 }

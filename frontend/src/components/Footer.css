@@ -94,6 +94,7 @@
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.35);
   text-decoration: none;
+  cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }
 
@@ -176,6 +177,17 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  animation: ftOverlayIn 0.2s ease;
+}
+
+@keyframes ftOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .ft-modal {
@@ -188,6 +200,19 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  animation: ftModalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes ftModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .ft-modal-header {

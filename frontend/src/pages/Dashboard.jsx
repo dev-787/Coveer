@@ -576,6 +576,8 @@ function PageWallet({ user }) {
 function PageCoverage({ user }) {
   const [autoRenew, setAutoRenew] = useState(user?.autoRenew ?? true);
   const plan        = user?.plan ?? 'basic';
+  const isVerified  = user?.verificationStatus === 'verified';
+  const verifStatus = user?.verificationStatus ?? 'pending';
   const city        = user?.city ?? '';
   const platform    = user?.platform ?? '';
   const memberSince = user?.createdAt
@@ -648,7 +650,10 @@ function PageCoverage({ user }) {
                 <span className="db-setting-label">Platform</span>
                 <span className="db-setting-sub">{platform}</span>
               </div>
-              <span className="db-setting-tag"><CheckCircle2 size={11} /> Verified</span>
+              <span className={`db-setting-tag ${isVerified ? '' : 'db-setting-tag--pending'}`}>
+                <CheckCircle2 size={11} />
+                {isVerified ? 'Verified' : verifStatus === 'under_review' ? 'Under verification' : 'Unverified'}
+              </span>
             </div>
           </div>
 
@@ -755,21 +760,21 @@ function PageProfile({ user }) {
             <div className="db-verification-list">
               {/* Documents — only shown as verified if verificationStatus is 'verified' */}
               <div className="db-verify-row">
-                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'pending' : 'unverified'}`} />
+                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
                 <div>
                   <span className="db-verify-label">Identity Document</span>
                   <span className="db-verify-sub">
-                    {isVerified ? 'Aadhaar verified' : docsSubmitted ? 'Under review' : 'Not submitted'}
+                    {isVerified ? 'Aadhaar verified' : docsSubmitted ? 'Under verification' : 'Not submitted'}
                   </span>
                 </div>
                 {isVerified && <CheckCircle2 size={14} className="db-verify-check" />}
               </div>
               <div className="db-verify-row">
-                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'pending' : 'unverified'}`} />
+                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
                 <div>
                   <span className="db-verify-label">Platform Proof</span>
                   <span className="db-verify-sub">
-                    {isVerified ? `${platform} partner confirmed` : docsSubmitted ? 'Under review' : 'Not submitted'}
+                    {isVerified ? `${platform} partner confirmed` : docsSubmitted ? 'Under verification' : 'Not submitted'}
                   </span>
                 </div>
                 {isVerified && <CheckCircle2 size={14} className="db-verify-check" />}

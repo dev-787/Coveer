@@ -882,6 +882,11 @@
   white-space: nowrap;
 }
 
+.db-setting-tag--pending {
+  color: rgba(220, 160, 40, 0.9);
+  background: rgba(220, 160, 40, 0.1);
+}
+
 /* Toggle */
 .db-toggle {
   width: 38px; height: 21px;
@@ -1162,7 +1167,12 @@
 
 /* ── Verify dot states ────────────────────────────────────────────────────────*/
 .db-verify-dot.unverified { background: rgba(255,255,255,0.2); }
-.db-verify-dot.pending    { background: orange; box-shadow: 0 0 6px orange; }
+.db-verify-dot.reviewing  { background: rgba(220,160,40,0.9); box-shadow: 0 0 6px rgba(220,160,40,0.5); animation: verifyPulse 1.8s ease-in-out infinite; }
+
+@keyframes verifyPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
 
 /* ── Bell wrap + dropdown ─────────────────────────────────────────────────────*/
 .db-bell-wrap {

@@ -11,11 +11,19 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'https://coveer.vercel.app',
-        'http://localhost:5174',
-    ],
+    origin: function(origin, callback) {
+        const allowed = [
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'https://coveer.vercel.app',
+        ];
+        // Allow any Vercel preview deployment
+        if (!origin || allowed.includes(origin) || /\.vercel\.app$/.test(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.use(express.json());

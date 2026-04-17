@@ -5,12 +5,12 @@ const Admin  = require('../../models/admin.model');
 const COOKIE_NAME = 'adminToken';
 
 function cookieOptions() {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
   return {
     httpOnly: true,
     sameSite: isProd ? 'none' : 'lax',
     secure:   isProd,
-    maxAge:   7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge:   7 * 24 * 60 * 60 * 1000,
   };
 }
 

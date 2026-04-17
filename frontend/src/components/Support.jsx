@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { MessageSquare, Mail, Phone } from 'lucide-react';
 import './Support.css';
+import { SectionPill } from './SectionPill';
 
 const CARDS = [
   {
@@ -105,6 +106,7 @@ export function Support() {
   return (
     <section className="sp-section" ref={sectionRef} id="support">
 
+      <SectionPill label="Support" />
       <h2 className="sp-headline">
         We're here when<br />you need <span className="sp-gradient">help</span>.
       </h2>

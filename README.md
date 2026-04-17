@@ -1,471 +1,488 @@
 ![Coveer Banner](./Assets/Cover.png)
+
+<div align="center">
+
 # 🛡️ Coveer
-### *Insurance that works as fast as you do.*
+### *Parametric Income Protection for India's Gig Workers*
 
-> **Coveer** is an AI-assisted parametric insurance platform that automatically protects the daily income of gig delivery workers from weather, AQI, and real-world disruptions — with zero claims, zero paperwork, and daily payouts at 10 PM.
+**The first AI-powered insurance system that monitors, measures, and pays — automatically.**
+
+[![React](https://img.shields.io/badge/React_19-0a0a0a?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-0a0a0a?style=flat&logo=node.js&logoColor=68A063)](https://nodejs.org)
+[![MongoDB](https://img.shields.io/badge/MongoDB-0a0a0a?style=flat&logo=mongodb&logoColor=47A248)](https://mongodb.com)
+[![Python](https://img.shields.io/badge/Python_FastAPI-0a0a0a?style=flat&logo=fastapi&logoColor=009688)](https://fastapi.tiangolo.com)
+
+</div>
 
 ---
 
-## 📌 Problem Statement
+## The Problem — ₹2,400 Lost Every Month
 
-India has **11+ million gig delivery workers** (Zomato, Swiggy, Blinkit, Zepto) whose entire livelihood depends on daily outdoor work. These workers earn between ₹500–₹1,500/day with **no safety net** when disruptions beyond their control make delivery impossible.
+India has **11+ million gig delivery workers** on Zomato, Swiggy, Blinkit, and Zepto. Their entire livelihood depends on outdoor work. When it rains heavily, AQI spikes, or a heatwave hits — orders stop, earnings collapse, and there is absolutely no safety net.
 
-### The Gap Traditional Insurance Fails to Address
-
-| Problem | Why Traditional Insurance Fails |
+| What happens | The gap |
 |---|---|
-| Rain stops orders for 3 hours | No product covers hourly income loss |
-| AQI crosses dangerous threshold | Not recognised as an insurable event |
-| Heatwave makes riding dangerous | No parametric trigger exists |
-| Worker needs money same day | Claim settlement takes weeks |
-| Worker can't file paperwork | Complex claim forms require documentation |
+| Rain stops orders for 3 hours | No product covers **hourly** income loss |
+| AQI crosses dangerous levels | Not recognised as an insurable event |
+| Heatwave makes riding dangerous | No parametric trigger exists in any product |
+| Worker needs money that same day | Traditional claims take weeks |
+| Worker can't file paperwork | Existing insurance demands documentation |
 
-> **There is no product in the Indian market that protects the daily earnings of gig workers from real-world disruptions on an hourly basis.**
-
----
-
-## 💡 Solution — What Coveer Does Differently
-
-Coveer is **not** a traditional insurance product. It is a **parametric income protection platform** built on three core principles:
-
-**1. Measure, Don't Verify** — Instead of asking workers to prove loss, we measure it using real-world data (weather APIs, AQI APIs, disruption signals).
-
-**2. Hourly Granularity** — Disruptions are tracked every hour. Workers are compensated for the exact hours they were impacted, not approximated.
-
-**3. Zero-Touch Settlement** — No claims. No calls. No paperwork. The system runs automatically at 10 PM every day and credits the wallet directly.
+> **There is no product in the Indian market that protects the daily earnings of gig workers from real-world disruptions on an hourly basis. Coveer is that product.**
 
 ---
 
-## 👤 Target Persona — Deep Segment Understanding
+## The Solution — Zero Claims. Just Pay.
 
-### Primary User: Urban Gig Delivery Partner
+Coveer is not traditional insurance. It is a **parametric income protection platform** built on one principle:
 
-| Attribute | Detail |
-|---|---|
-| Age | 18–45 years |
-| Platform | Zomato / Swiggy / Blinkit / Zepto / Amazon / Flipkart |
-| Daily Income | ₹500–₹1,500/day (₹150–₹190/hour approx.) |
-| Work Nature | Outdoor, weather-dependent, no fixed hours |
-| Device | Android smartphone, low-to-mid range |
-| Payment Preference | UPI-first (PhonePe, GPay) |
-| Language | Hindi + Regional, limited English comfort |
-| Trust Barriers | Suspicious of insurance, fears hidden charges |
-| Key Motivation | Stable daily income, family support |
-
-### Segment-Specific Pain Points We Address
-
-**Financial Instability** — A worker losing 4 hours to heavy rain loses ~₹600 that day with no recovery. Coveer replaces that loss automatically.
-
-**No Traditional Coverage** — Health insurance, vehicle insurance, and term life insurance exist but nothing covers *daily income loss from weather*.
-
-**Behavioural Barrier** — Traditional insurance requires claim filing. A delivery worker finishing a 12-hour shift will not file paperwork. Coveer requires zero action post-signup.
-
-**Trust Gap** — Workers don't trust that insurance will actually pay. Coveer's wallet model — where money visibly appears at 10 PM — builds trust through repeated, tangible proof.
-
----
-
-## 🏗️ Product Architecture & Workflow
-
-### Phase 1 — User Onboarding
+> *Measure impact. Pay automatically. Never ask the worker to prove anything.*
 
 ```
-User Downloads App / Visits Web
+Worker signs up once (< 2 minutes)
           ↓
-Step 1: Account Creation (< 2 minutes)
-  • Email + Password
-  • Full name + Date of birth
-  • Delivery platform selection
-  • Primary city
-  • Average daily earnings (used for payout calc)
+System monitors their city every hour
           ↓
-Step 2: Plan Selection
-  • Basic Plan — ₹25/week — Max ₹600/day payout
-  • Premium Plan — ₹40/week — Max ₹1,000/day payout
-  • Auto-renew toggle
-  • T&C acceptance
+Disruption threshold crossed → impact % calculated
           ↓
-Step 3: Identity Verification (AI-Assisted)
-  • Upload: Aadhaar / PAN card (identity proof)
-  • Upload: Platform partner app screenshot (work proof)
-  • AI validates: Real vs fake document detection (ELA tampering analysis)
-  • AI validates: OCR extraction → Name + DOB match against profile
-  • AI validates: Platform keywords present in screenshot
-  • Status: under_review → verified (auto) / manual_review (low confidence)
-          ↓
-Step 4: GPS Location Verification
-  • One-time location permission request
-  • System cross-checks GPS coordinates against registered city
-  • Background periodic checks for fraud prevention
-          ↓
-Dashboard Unlocked — Coverage Active
-```
-
-### Phase 2 — Hourly Disruption Monitoring (Always Running)
-
-```
-Every Hour (Cron Job):
-          ↓
-┌─────────────────────────────────────────────┐
-│  Data Sources Queried:                       │
-│  • OpenWeatherMap API → rainfall mm/hr, temp │
-│  • AQI API → PM2.5, PM10, AQI index         │
-│  • Local disruption signals (mock → real)    │
-└─────────────────────────────────────────────┘
-          ↓
-AI Severity Model (XGBoost) Runs:
-  Input: rainfall intensity + temperature + AQI + time + city
-  Output: Impact Percentage (0% → 100%)
-
-  Light Rain      → 30% impact
-  Heavy Rain      → 60% impact
-  Extreme Weather → 100% impact
-  AQI > 300       → 40% impact
-  Heatwave > 42°C → 50% impact
-          ↓
-Each city-zone tagged: AFFECTED (%) or NOT AFFECTED
-```
-
-### Phase 3 — Per-Worker Impact Tracking
-
-```
-For Each Active User:
-          ↓
-Match: Worker's registered city/zone ↔ Disruption data
-          ↓
-If zone is AFFECTED:
-  Record: timestamp, impact_percentage, disruption_type
-  Accumulate: daily_affected_hours[]
-          ↓
-Running daily total maintained per user
-```
-
-**Example — Real Worker Day:**
-
-```
-12:00 PM  →  Normal         →  0% impact   →  Not counted
-1:00 PM   →  Light Rain     →  30% impact  →  0.3 hrs counted
-2:00 PM   →  Heavy Rain     →  60% impact  →  0.6 hrs counted
-3:00 PM   →  Heavy Rain     →  60% impact  →  0.6 hrs counted
-4:00 PM   →  Clearing       →  10% impact  →  0.1 hrs counted
-5:00 PM   →  Normal         →  0% impact   →  Not counted
-
-Total Effective Affected Hours = 1.6 hours
-Hourly Income = ₹150
-Payout = 1.6 × ₹150 = ₹240 (capped at plan max)
-```
-
-### Phase 4 — 10 PM Daily Settlement Engine
-
-```
-Every day at 10:00 PM (Cron Job):
-          ↓
-Fetch all users where:
-  • verificationStatus = 'verified'
-  • plan is active (premium not expired)
-  • daily_affected_hours > 0
-          ↓
-For each user:
-  1. Calculate: hourlyIncome = dailyEarnings / 8
-  2. Calculate: rawPayout = hourlyIncome × affectedHours
-  3. Apply: plan cap (Basic: ₹600, Premium: ₹1,000)
-  4. Apply: trust score modifier (flagged users → delayed)
-  5. Credit: wallet.balance += finalPayout
-  6. Log: transaction { type: 'payout', amount, disruption, hours }
-  7. Reset: daily_affected_hours = []
-          ↓
-Worker sees +₹240 in wallet at 10 PM
-No action required. No claim filed.
+Wallet credited automatically — no action from worker
 ```
 
 ---
 
-## ⚡ Parametric Trigger System — Insurance Domain Logic
+## How It Works — The Technical Reality
 
-### What Makes This Parametric Insurance
+### 1 — Parametric Trigger System
 
-Traditional insurance: **Loss occurs → Worker files claim → Insurer investigates → Settlement (weeks)**
+Instead of claim-based verification, Coveer uses real-world data thresholds that trigger payouts automatically:
 
-Parametric insurance: **Pre-defined trigger threshold crossed → Automatic payout → No investigation needed**
-
-Coveer's parametric triggers are defined as:
-
-| Disruption Type | Trigger Threshold | Impact Level |
+| Disruption | Threshold | Impact Level |
 |---|---|---|
-| Rainfall | > 2.5 mm/hr | Light (30%) |
-| Rainfall | > 7.5 mm/hr | Heavy (60%) |
-| Rainfall | > 15 mm/hr | Extreme (100%) |
-| Temperature | > 42°C | Severe Heat (50%) |
-| AQI | 201–300 | Unhealthy (30%) |
-| AQI | > 300 | Hazardous (60%) |
-| Local Curfew | Authority signal | Extreme (100%) |
+| Rainfall | > 2.5 mm/hr | 30% |
+| Rainfall | > 7.5 mm/hr | 60% |
+| Rainfall | > 15 mm/hr | 100% |
+| Temperature | > 42°C | 50% |
+| AQI | 201–300 | 30% |
+| AQI | > 300 | 60% |
+| Local Curfew | Authority signal | 100% |
 
-### Coverage Exclusions (Insurance Domain Fundamentals)
-
-The following are explicitly **excluded** from payout calculation:
-
-- **Scheduled maintenance** — Platform downtime not caused by weather
-- **Worker voluntary offline** — Worker goes offline not due to disruption
-- **Fraud-flagged sessions** — Trust score below threshold
-- **Non-registered zones** — Worker operating outside their registered city
-- **Premium lapse** — Coverage paused if weekly premium not renewed
-- **First 2 hours each day** — Deductible equivalent (reduces moral hazard)
-- **Payout cap enforcement** — Basic: ₹600/day, Premium: ₹1,000/day regardless of hours
-
-### Actuarial Thinking — Loss Ratio Management
-
+**Payout Formula:**
 ```
-Revenue per worker per week:
-  Basic:   ₹25/week = ₹100/month
-  Premium: ₹40/week = ₹160/month
-
-Expected payout per worker per month (Mumbai):
-  Average disrupted hours/month: ~18 hours
-  Average hourly income: ₹150
-  Expected raw payout: ₹2,700/month
-  After cap enforcement (avg): ~₹480/month
-
-Target Loss Ratio: < 65% (premium collected vs payouts made)
-Safety mechanism: AI risk-based premium adjusts per city
-  High-risk city (Mumbai monsoon) → Premium scales up
-  Low-risk city (Jaipur summer)   → Premium stays flat
+hourlyIncome    = dailyEarnings ÷ 8
+effectivePayout = hourlyIncome × (impactPercentage ÷ 100)
+finalPayout     = min(effectivePayout, planMaxDailyPayout)
 ```
 
----
-
-## 🤖 AI/ML Strategy — Technical Depth
-
-### Model 1: Document Verification (Identity Validation)
-
-**Pipeline:**
+**Example — Real Worker Day in Mumbai:**
 ```
-Image Upload → EasyOCR (text extraction) → Keyword validation
-            → ELA (Error Level Analysis) for tampering detection
-            → Fuzzy name match (fuzzywuzzy, threshold: 80%)
-            → DOB match (dateparser)
-            → Confidence score → auto-approve / manual_review / reject
+12:00 PM  Normal           →   0% impact   →  ₹0
+01:00 PM  Light Rain       →  30% impact   →  ₹45  (₹150 × 0.30)
+02:00 PM  Heavy Rain       →  60% impact   →  ₹90  (₹150 × 0.60)
+03:00 PM  Heavy Rain       →  60% impact   →  ₹90  (₹150 × 0.60)
+04:00 PM  Clearing         →   0% impact   →  ₹0
+                                              ────
+Total credited at 10 PM    →               ₹225
 ```
 
-**Accuracy targets:**
-- Document type detection: ~95%
-- Name match (clean scan): ~85%
-- Tampering detection: ~75%
-- Confidence threshold: > 0.80 → auto-approve, 0.60–0.80 → manual review, < 0.60 → reject
+### 2 — Hourly Weather Caching Architecture
 
-### Model 2: Disruption Severity (Impact Scoring)
+The most critical architectural decision in Coveer is how we handle weather data at scale.
 
-**Model:** XGBoost Gradient Boosting (tabular weather data)
-
-**Features:**
-- Rainfall intensity (mm/hr)
-- Temperature (°C)
-- AQI PM2.5 index
-- Time of day (peak hours weighted higher)
-- City historical baseline
-- Day of week
-
-**Output:** Impact percentage (0.0 → 1.0) per city-zone per hour
-
-**Why XGBoost:** Fast inference (< 50ms), handles tabular data well, works on small datasets, easily retrained as real payout data accumulates
-
-### Model 3: Fraud Detection
-
-**Layer 1 — Rule-Based (runs first, cheapest):**
-- Worker always affected every single day → flag
-- No GPS movement during working hours → flag
-- Same device ID, multiple accounts → block
-- Payout claimed same hour as registration → flag
-
-**Layer 2 — Isolation Forest (anomaly detection):**
-- Unsupervised — no labelled fraud data needed to start
-- Learns what "normal" behavior looks like across all users
-- Flags statistical outliers for manual review
-
-**Layer 3 — DBSCAN Clustering (fraud ring detection):**
-- Groups users by GPS coordinates + claim timing + behavior
-- If N users in same location all claim affected on same hours → fraud ring suspected
-- Action: delay payouts, escalate to manual review
-
-### Model 4: Risk-Based Premium Pricing
-
-**Method:** Historical weather data + city disruption frequency → city risk score → premium multiplier
-
+**Wrong approach (what we didn't do):**
 ```
-Mumbai (monsoon city)  → risk score: 0.82 → 1.3× base premium
-Bengaluru (moderate)   → risk score: 0.55 → 1.0× base premium
-Jaipur (low rain)      → risk score: 0.28 → 0.85× base premium
+1,000 users open dashboard → 1,000 API calls to OpenWeatherMap → rate limit hit instantly
 ```
 
----
+**Coveer's approach:**
+```
+Cron job runs every hour → 10 API calls (one per city) → stored in MongoDB
+1,000 users open dashboard → 1,000 queries to MongoDB → instant response
+```
 
-## 🛡️ Anti-Fraud Architecture
+This means external API usage stays flat at **10 calls/hour regardless of user count**, costs nothing extra at scale, and dashboards load in milliseconds.
 
-### Why This System is Structurally Fraud-Resistant
+**CityWeather collection** stores hourly snapshots with a 48-hour TTL index — auto-deleted by MongoDB, no cleanup needed.
 
-**The biggest fraud vector in traditional insurance is the claim itself.** When workers file claims, bad actors can fabricate claims. Coveer eliminates this entirely — workers never file anything. Payouts are triggered purely by external data.
+### 3 — AI-Assisted Document Verification
 
-### Multi-Layer Defense Stack
+The verification pipeline runs automatically the moment a worker submits documents:
 
 ```
-Layer 1 → No claim system (structural defense)
-Layer 2 → GPS verification (passive, background)
+Worker uploads Aadhaar + Platform Screenshot
+                    ↓
+Backend → ImageKit CDN (permanent storage, secure URLs)
+                    ↓
+Async call to Python ML Service (FastAPI on Hugging Face)
+                    ↓
+┌─────────────────────────────────────────────────────┐
+│  1. ELA (Error Level Analysis) — tampering detection │
+│  2. EasyOCR — text extraction from both documents    │
+│  3. Fuzzy name match (threshold: 80%) — fuzzywuzzy   │
+│  4. DOB cross-check — dateparser                     │
+│  5. Platform keyword validation — "Partner/Active"   │
+│  6. Weighted confidence score                        │
+└─────────────────────────────────────────────────────┘
+                    ↓
+> 0.80 → Auto-verified instantly
+0.60–0.80 → Flagged for admin manual review
+< 0.60 → Auto-rejected with reason stored
+```
+
+**Why this matters for insurance:** Traditional KYC takes days. Coveer's pipeline completes in under 90 seconds.
+
+### 4 — Dynamic Plan Pricing (Actuarial Logic)
+
+Fixed premiums create adverse selection — high earners are overcharged, low earners are underserved. Coveer's plan pricing scales with declared daily earnings:
+
+| Daily Earnings | Basic Price | Basic Max/day | Premium Price | Premium Max/day |
+|---|---|---|---|---|
+| ₹300 (min) | ₹20/week | ₹300 | ₹40/week | ₹600 |
+| ₹1,150 (mid) | ₹25/week | ₹450 | ₹45/week | ₹800 |
+| ₹2,000 (max) | ₹30/week | ₹600 | ₹50/week | ₹1,000 |
+
+**Target loss ratio:** < 65% (premium collected vs payouts made). Higher-risk cities (Mumbai monsoon season) carry a risk multiplier on premium — lower-risk cities get reduced premiums. This is the same actuarial principle used by traditional insurers, applied dynamically.
+
+### 5 — Fraud Defense Architecture
+
+**The biggest structural advantage: no claim system.**
+
+Traditional insurance fraud entry point is the claim itself — fabricated losses, exaggerated damages. Coveer eliminates this entirely. Workers never file anything. Payouts trigger from external data only.
+
+**Additional defense layers:**
+
+```
+Layer 1 → No claim system (structural — no entry point)
+Layer 2 → GPS verification (passive background checks)
 Layer 3 → IP + GPS mismatch detection
-Layer 4 → Behavioral anomaly (Isolation Forest)
-Layer 5 → Cluster detection (DBSCAN)
-Layer 6 → Trust score system
-Layer 7 → Payout delay for flagged users
+Layer 4 → Behavioral anomaly detection (Isolation Forest)
+Layer 5 → Cluster fraud detection (DBSCAN)
+Layer 6 → Trust score system (0–100)
+Layer 7 → Payout delay for flagged accounts
 ```
 
-### Trust Score System
+**Trust Score:**
 
-Every user starts at score 100. Score modifies payout behaviour:
-
-| Score Range | Status | Action |
+| Score | Status | Payout Behaviour |
 |---|---|---|
-| 80–100 | High Trust | Instant payout at 10 PM |
-| 60–79 | Medium Trust | 24-hour delay, light review |
-| 40–59 | Low Trust | 48-hour hold, manual flag |
-| < 40 | Flagged | Payouts blocked, account review |
+| 80–100 | High Trust | Instant |
+| 60–79 | Medium Trust | 24-hour delay |
+| 40–59 | Low Trust | 48-hour hold |
+| < 40 | Flagged | Blocked + admin review |
 
-**Fairness guarantee:** First-time users are always trusted (score 100). Score only decreases with repeated anomalies. Genuine users are never penalised for one irregular day.
+### 6 — Wallet & Payment Architecture
+
+All money flows through a single internal wallet per user. Razorpay is used only at entry and exit points:
+
+```
+MONEY IN:  Razorpay Checkout → verified → wallet.balance += amount
+PLAN:      wallet.balance -= plan.weeklyPrice → planStatus: 'active'
+PAYOUT:    Settlement engine → planStatus check → wallet.balance += payout
+MONEY OUT: Razorpay Payout API → wallet.balance -= withdrawal
+```
+
+**Plan renewal logic (runs daily at 00:05):**
+- `planExpiresAt <= now` AND `autoRenew: true` AND sufficient balance → auto-renew, extend 7 days
+- Insufficient balance → `planStatus: 'inactive'` → excluded from next settlement run
+- `autoRenew: false` → `planStatus: 'expired'`
+
+**Settlement engine checks `planStatus === 'active'` before crediting any payout.** This single check ensures inactive users never receive payouts, and it runs as the final gate in the settlement cron.
 
 ---
 
-## 💰 Payout & Wallet System
+## Coverage Exclusions (Insurance Domain)
 
-### Payout Formula
+Standard insurance exclusions that prevent moral hazard:
 
-```
-Effective Hours = Σ (impact_percentage × 1 hour) for each affected hour
-Payout = Effective Hours × Hourly Income
-Final Payout = MIN(Payout, Plan Daily Cap)
-```
-
-### Wallet Architecture
-
-```
-Worker Wallet:
-  balance: ₹1,250
-  transactions: [
-    { type: 'payout',   amount: +₹450, reason: 'Heavy Rain 3hrs', date: '2024-03-15' }
-    { type: 'premium',  amount: -₹25,  reason: 'Basic Plan Week 12', date: '2024-03-14' }
-    { type: 'payout',   amount: +₹300, reason: 'Heatwave 2hrs',   date: '2024-03-13' }
-    { type: 'withdrawal', amount: -₹500, method: 'UPI', date: '2024-03-12' }
-  ]
-```
-
-### Withdrawal Flow
-
-Worker-initiated. No minimum payout period. Options:
-- **UPI** (primary — instant, preferred by target segment)
-- **Bank Transfer** (2–4 hours, IMPS)
-- **Payment Gateway** — Razorpay integration
+- First 2 hours each day (daily deductible equivalent)
+- Voluntary offline — not caused by a monitored disruption
+- Platform scheduled maintenance windows
+- Operating outside registered city (GPS cross-check)
+- Plan inactive, expired, or payment lapsed
+- Trust score below 40 (fraud-flagged accounts)
 
 ---
 
-## 🧱 Tech Stack
+## System Architecture
+
+![System Flow](./Assets/SystemFlow.png)
+
+### Cron Job Schedule
+
+| Job | Runs At | Function |
+|---|---|---|
+| Weather Fetch | Every hour `:50` | Fetches OpenWeatherMap + AQI for 10 cities, stores snapshots, computes impact % |
+| Settlement | Every hour `:55` | Reads unsettled `HourlyImpact` records, calculates payouts per active user, credits wallets |
+| Plan Renewal | Daily `00:05` | Checks expired plans, auto-renews if balance sufficient, marks inactive if not |
+
+---
+
+## Tech Stack
 
 ### Frontend
-- **React.js + Vite** — Fast builds, component-based
-- **React Router** — Client-side routing
-- **Axios** — API calls with cookie-based auth
-- **Lucide React** — Icon system
+| Technology | Purpose |
+|---|---|
+| React 19 + Vite 8 | UI framework with fast HMR builds |
+| React Router v7 | Client-side routing with protected routes |
+| Axios + HTTP-only cookies | Secure API communication (no localStorage tokens) |
+| Recharts | Admin dashboard data visualisation |
+| Lucide React | Icon system |
+| React Toastify | Non-blocking user notifications |
+| Vercel Analytics | Production usage tracking |
 
 ### Backend
-- **Node.js + Express.js** — REST API server
-- **MongoDB + Mongoose** — Document database, flexible schema
-- **JWT + HTTP-only cookies** — Secure authentication
-- **Multer + ImageKit.io** — Document upload and cloud storage
-- **Node-cron** — Scheduled jobs (hourly monitoring, 10 PM settlement)
+| Technology | Purpose |
+|---|---|
+| Node.js + Express 5 | REST API server |
+| MongoDB + Mongoose 9 | Document database with TTL indexes |
+| JWT (dual-secret) | Separate JWT secrets for users and admins — `token` vs `adminToken` cookies |
+| Multer + ImageKit.io | Document upload pipeline with CDN delivery |
+| Node-cron | Scheduled jobs (weather fetch, settlement, renewal) |
+| Razorpay | Payment processing — wallet top-up and UPI withdrawals |
+| Axios | Internal calls to ML service |
 
-### AI/ML Layer
-- **Python + FastAPI** — ML microservice
-- **EasyOCR** — Document text extraction
-- **XGBoost** — Disruption severity model
-- **scikit-learn** — Isolation Forest fraud detection
-- **fuzzywuzzy** — Fuzzy name matching
-- **PIL/Pillow** — ELA image tampering detection
+### ML Service
+| Technology | Purpose |
+|---|---|
+| Python + FastAPI | Async verification service |
+| EasyOCR | Multilingual text extraction (English + Hindi for Aadhaar) |
+| PIL/Pillow + ELA | Image tampering detection via compression analysis |
+| fuzzywuzzy | Fuzzy name matching with configurable threshold |
+| dateparser | DOB extraction from multiple date formats |
+| Hugging Face Spaces (Docker) | Serverless GPU-optional deployment |
 
 ### External APIs
-- **OpenWeatherMap API** — Hourly weather data
-- **AQI API** — Pollution monitoring
-- **Razorpay** — Payment processing
-
-### Cloud & Storage
-- **ImageKit.io** — Verification document storage (CDN-backed, secure)
-
----
-
-## 📊 Dashboard Architecture
-
-### Worker Dashboard (MVP Scope)
-
-```
-Home Screen:
-  ┌─────────────────────────────────────────────┐
-  │  Good evening, Rahul                         │
-  │  Today's Status: 🔴 Affected (2.3 hrs so far)│
-  │  Estimated payout: ₹345                      │
-  └─────────────────────────────────────────────┘
-
-  Wallet Card:
-  ┌─────────────────────────────────────────────┐
-  │  Balance: ₹1,250          [Withdraw]         │
-  │  Last payout: +₹450 · Rain · Yesterday       │
-  └─────────────────────────────────────────────┘
-
-  This Week (last 7 days):
-  Mon  Heavy Rain   +₹600
-  Tue  Normal       —
-  Wed  AQI High     +₹180
-  Thu  Normal       —
-  Fri  Storm        +₹450
-```
-
-### Admin Dashboard
-
-- Total active users + verification queue
-- Live disruption map by city
-- Fraud alert feed (Isolation Forest triggers)
-- Loss ratio monitor (premium collected vs payouts made)
-- Risk zone predictions (next 48 hours)
-- Manual verification review queue
+| API | Usage |
+|---|---|
+| OpenWeatherMap | Hourly rainfall (mm/hr), temperature, wind per city |
+| OpenWeatherMap Air Pollution | PM2.5, AQI index per city coordinates |
+| Razorpay | Payment orders, signature verification, UPI payouts |
 
 ---
 
-## 🚀 Why Coveer Stands Out
+## Project Structure
+
+```
+coveer/
+├── frontend/
+│   └── src/
+│       ├── admin/              # Fully isolated admin system
+│       │   ├── context/        # AdminAuthContext (separate from user auth)
+│       │   ├── components/     # AdminSidebar, StatCard, DataTable, UserEditModal
+│       │   ├── pages/          # Login, Dashboard, Users, Weather, Payouts
+│       │   ├── api/            # adminApi.js (pre-configured axios instance)
+│       │   └── styles/         # admin.css (same design system, admin variables)
+│       ├── components/         # Navbar, Hero, HowItWorks, WhySection, PlatformStrip
+│       ├── pages/              # Home, Auth, Start, Verify, Dashboard
+│       └── context/            # AuthContext (user auth state)
+│
+├── backend/
+│   └── src/
+│       ├── controllers/
+│       │   ├── admin/          # auth, users, weather, payouts, stats
+│       │   └── ...             # user auth, verification, payment, weather
+│       ├── models/             # User, Admin, CityWeather, HourlyImpact
+│       ├── routes/
+│       │   ├── admin/          # All admin routes under /admin/*
+│       │   └── ...             # User-facing routes
+│       ├── jobs/               # weatherCron, settlementCron, planRenewalCron
+│       ├── services/           # wallet.service, weather.service
+│       ├── middlewares/        # auth.middleware, adminAuth.middleware
+│       └── scripts/            # createAdmin.js (one-time seed)
+│
+└── ml-service/
+    ├── app.py                  # FastAPI entry point
+    ├── Dockerfile              # Hugging Face Spaces deployment
+    └── validators/
+        ├── ela.py              # Error Level Analysis
+        ├── ocr.py              # EasyOCR wrapper
+        ├── document.py         # Aadhaar/PAN extraction + validation
+        ├── platform.py         # Screenshot keyword validation
+        └── name_match.py       # Fuzzy name comparison
+```
+
+---
+
+## Deployment
+
+### Backend — Render
+
+1. Connect repo to Render, set **Root Directory** to `backend`
+2. **Build Command:** `npm install`
+3. **Start Command:** `npm start`
+4. Add all environment variables (see below)
+5. After first deploy, seed admin account:
+```bash
+node backend/src/scripts/createAdmin.js
+```
+
+### Frontend — Vercel
+
+1. Import repo on Vercel, set **Root Directory** to `frontend`
+2. **Framework:** Vite
+3. Set environment variable: `VITE_API_URL` = your Render backend URL
+4. Deploy — zero config needed
+
+### ML Service — Hugging Face Spaces
+
+1. Create a new Space, SDK: **Docker**
+2. Push `ml-service/` contents to the Space repo
+3. Dockerfile exposes port `7860` — Hugging Face manages the rest
+4. Set `ML_SERVICE_URL` in backend env to the Space URL
+
+---
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+```env
+PORT=3000
+MONGODB_URI=your_mongodb_atlas_uri
+
+# User auth
+JWT_SECRET=your_user_jwt_secret
+
+# Admin auth (separate secret — critical)
+ADMIN_JWT_SECRET=your_admin_jwt_secret
+ADMIN_EMAIL=admin@coveer.in
+ADMIN_PASSWORD=your_secure_admin_password
+
+# ImageKit (document storage)
+IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id/
+
+# Weather
+OPENWEATHER_API_KEY=your_openweather_key
+
+# Payments
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+RAZORPAY_ACCOUNT_NUMBER=your_account_number
+
+# ML Service
+ML_SERVICE_URL=https://your-hf-space.hf.space
+
+NODE_ENV=production
+```
+
+### Frontend (`frontend/.env`)
+
+```env
+VITE_API_URL=https://your-backend.onrender.com
+```
+
+---
+
+## User Journey
+
+### Worker Onboarding (< 2 minutes)
+
+```
+Step 1 — Account
+  Name · Email · Password · Date of Birth
+
+Step 2 — Work Details
+  Platform (Zomato/Swiggy/Blinkit/Zepto/Amazon/Flipkart)
+  Primary city · Average daily earnings (₹300–₹2,000)
+
+Step 3 — Plan Selection
+  Basic or Premium — prices and max payouts update live
+  based on declared daily earnings
+
+→ Redirect to /verify
+```
+
+### Identity Verification
+
+```
+Upload Aadhaar/PAN + Platform partner app screenshot
+→ ML service validates in < 90 seconds
+→ Status: verified → Dashboard unlocked
+→ Status: under_review → Admin manually reviews
+→ Status: rejected → Reason shown, re-upload available
+```
+
+### Daily Worker Experience
+
+```
+Worker opens dashboard → sees live conditions for their city
+Weather data loads from MongoDB (< 100ms — cached, not external API)
+If affected: estimated payout shown
+At 10 PM → settlement runs → wallet credited automatically
+Worker withdraws via UPI at any time (min ₹10)
+```
+
+---
+
+## Admin Capabilities
+
+The admin panel (`/admin/*`) is completely isolated from the user-facing app — separate auth context, separate JWT secret, separate cookie name, separate middleware.
+
+**Admin Dashboard:**
+- Real-time overview: total users, active plans, today's payout total, cities currently affected
+- User growth chart (30 days) — AreaChart with Recharts
+- Payout trend chart (30 days) — BarChart with Recharts
+- Hourly weather impact chart (24 hours) — LineChart with Recharts
+- Today's payouts table — live, timestamped
+
+**User Management:**
+- Search by name/email, filter by plan/status/city/verification
+- Edit: city, plan, plan status, daily earnings, auto-renew, trust score
+- View verification documents (Aadhaar + platform screenshot thumbnails with full-size links)
+- Manually override verification status + set rejection reason
+- Full admin change log per user (field, old value, new value, timestamp, admin name)
+
+**Weather Monitoring:**
+- Live status cards for all 10 cities — green/red based on current impact
+- Full hourly snapshot table with sort/filter
+- Last fetch time per city + next scheduled fetch countdown
+
+**Payout Management:**
+- All-time, monthly, weekly payout stats
+- Today's payouts highlighted with total amount
+- Filter by date, city, plan
+
+---
+
+## Why Coveer Stands Out
 
 | Dimension | Traditional Insurance | Coveer |
 |---|---|---|
-| Claim process | File paperwork, wait weeks | Zero claims, automatic |
-| Coverage granularity | Daily/monthly | Hourly, percentage-based |
-| Payout speed | 7–30 days | Same day, 10 PM |
-| Target segment | Formal sector employees | Gig workers, informal economy |
-| Fraud prevention | Investigation after claim | Structural — no claim possible |
-| Premium | High (actuarial tables) | ₹25–₹40/week, risk-adjusted by city |
-| Distribution | Agent / broker | Mobile-first, self-serve |
+| Claim process | File paperwork, wait weeks | Zero claims — automatic |
+| Coverage granularity | Daily / monthly | Hourly, percentage-based |
+| Payout speed | 7–30 days | Same hour |
+| Target segment | Formal sector | Gig workers, informal economy |
+| Fraud prevention | Post-claim investigation | Structural — no claim possible |
+| Premium model | Flat rate | Risk-adjusted by city + earnings |
+| Distribution | Agent / broker network | Mobile-first, self-serve, < 2 min |
+| Verification | Manual KYC, days | AI pipeline, < 90 seconds |
 
 ---
 
-## 🔮 Roadmap
+## What We Built vs What's Planned
 
-### Phase 1 — MVP (Current)
-- ✅ User registration + 3-step onboarding
-- ✅ AI document verification pipeline
-- ✅ Hourly disruption monitoring (weather + AQI)
-- ✅ Daily settlement engine
-- ✅ Wallet + transaction history
-- ✅ Basic fraud detection (rule-based)
-
-### Phase 2 — Hardening
-- 🔲 GPS-based location verification (background)
-- 🔲 XGBoost severity model (trained on real data)
-- 🔲 Isolation Forest fraud detection (deployed)
-- 🔲 UPI withdrawal integration (Razorpay)
-- 🔲 Push notifications (payout alerts)
-- 🔲 Admin dashboard with fraud alerts
+### ✅ Built (MVP — This Submission)
+- Full user onboarding — 3-step signup with dynamic plan pricing
+- AI-assisted identity verification pipeline (OCR + ELA + fuzzy match)
+- Hourly weather monitoring for 10 Indian cities (cached architecture)
+- Parametric trigger system with percentage-based impact scoring
+- Hourly settlement engine with planStatus gating
+- Internal wallet system with Razorpay integration (top-up + withdrawal)
+- Plan renewal cron with balance-based activation/deactivation
+- Trust score system with payout delay tiers
+- Full admin panel (auth, dashboard, user management, weather, payouts)
+- Protected routes for both user and admin systems
+- Push notifications for payout credits
+- Dynamic risk-based premium pricing per city (actuarial model)
 
 ---
 
-## 📐 System Flow Diagram
+<div align="center">
 
-![Coveer Banner](./Assets/SystemFlow.png)
+**Built for India's 11 million gig workers.**
+
+*No claims. No paperwork. Just protection.*
+
+</div>

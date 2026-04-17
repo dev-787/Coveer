@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const axios    = require('axios');
 const imagekit = require('../config/imagekit');
 const userModel = require('../models/user.model');
+const { notify } = require('../services/notification.service');
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'https://karshs-coveer-verification.hf.space';
 
@@ -44,6 +45,10 @@ async function uploadDocuments(req, res) {
     // Call ML service asynchronously — don't block the response
     setImmediate(async () => {
       try {
+        console.log(`[Verify] Calling ML service for user ${userId}`);
+        console.log(`[Verify] Identity URL: ${identityUrl}`);
+        console.log(`[Verify] Platform URL: ${platformUrl}`);
+
         const mlRes = await axios.post(`${ML_SERVICE_URL}/validate`, {
           userId: String(userId),
           identityProofUrl: identityUrl,
@@ -54,9 +59,10 @@ async function uploadDocuments(req, res) {
             dob:       user.dob ? new Date(user.dob).toISOString().slice(0, 10) : '',
             platform:  user.platform || '',
           },
-        }, { timeout: 60000 });
+        }, { timeout: 90000 });
 
         const { valid, reason, confidence } = mlRes.data;
+        console.log(`[Verify] ML response for user ${userId}: valid=${valid}, reason=${reason}, confidence=${confidence}`);
 
         if (valid) {
           await userModel.findByIdAndUpdate(userId, {
@@ -64,21 +70,26 @@ async function uploadDocuments(req, res) {
             isVerified:              true,
             verificationCompletedAt: new Date(),
           });
-          console.log(`[Verify] User ${userId} auto-verified (confidence: ${confidence})`);
+          console.log(`[Verify] User ${userId} auto-verified`);
+          await notify(userId, 'info', '✅ Identity Verified',
+            'Your documents have been verified successfully. Your coverage is now fully active and payouts are enabled.');
         } else if (reason === 'manual_review') {
-          // Keep under_review — admin will decide
           console.log(`[Verify] User ${userId} flagged for manual review (confidence: ${confidence})`);
+          await notify(userId, 'info', '🔍 Verification Under Review',
+            "Our team is reviewing your documents. This usually takes a few hours. You'll be notified once complete.");
         } else {
           await userModel.findByIdAndUpdate(userId, {
             verificationStatus:          'rejected',
             verificationRejectionReason: reason || 'Verification failed',
             verificationCompletedAt:     new Date(),
           });
-          console.log(`[Verify] User ${userId} rejected — ${reason} (confidence: ${confidence})`);
+          console.log(`[Verify] User ${userId} rejected — ${reason}`);
+          await notify(userId, 'info', '❌ Verification Failed',
+            `We couldn't verify your documents. Reason: ${reason || 'Document validation failed'}. Please re-upload clear photos and try again.`);
         }
       } catch (mlErr) {
-        console.error('[Verify] ML service error:', mlErr.message);
-        // Leave as under_review for manual admin review
+        console.error(`[Verify] ML service call FAILED for user ${userId}:`, mlErr.message);
+        console.error(`[Verify] Status: ${mlErr.response?.status}, Data: ${JSON.stringify(mlErr.response?.data)}`);
       }
     });
 

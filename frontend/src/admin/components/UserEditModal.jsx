@@ -145,6 +145,44 @@ export default function UserEditModal({ userId, onClose, onSaved }) {
                 </label>
               </div>
 
+              {/* Rejection reason */}
+              {form.verificationStatus === 'rejected' && (
+                <div className="admin-form-row">
+                  <label className="admin-form-label">Rejection Reason</label>
+                  <input type="text" className="admin-input" style={{ width: '100%' }}
+                    placeholder="e.g. Document unclear, name mismatch..."
+                    value={form.verificationRejectionReason || ''}
+                    onChange={e => setForm(p => ({ ...p, verificationRejectionReason: e.target.value }))} />
+                </div>
+              )}
+
+              {/* Uploaded documents */}
+              <div className="admin-form-row">
+                <label className="admin-form-label">Uploaded Documents</label>
+                {user?.verificationDocuments?.identityProof || user?.verificationDocuments?.platformProof ? (
+                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                    {user.verificationDocuments.identityProof && (
+                      <a href={user.verificationDocuments.identityProof} target="_blank" rel="noreferrer"
+                        style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                        <img src={user.verificationDocuments.identityProof} alt="Identity"
+                          style={{ width: 140, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)' }} />
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(123,121,196,0.8)', textAlign: 'center' }}>Identity Proof ↗</span>
+                      </a>
+                    )}
+                    {user.verificationDocuments.platformProof && (
+                      <a href={user.verificationDocuments.platformProof} target="_blank" rel="noreferrer"
+                        style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                        <img src={user.verificationDocuments.platformProof} alt="Platform"
+                          style={{ width: 140, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)' }} />
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(123,121,196,0.8)', textAlign: 'center' }}>Platform Proof ↗</span>
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.25)', margin: '0.25rem 0 0' }}>No documents submitted yet.</p>
+                )}
+              </div>
+
               {/* Daily Earnings */}
               <div className="admin-form-row">
                 <label className="admin-form-label">Daily Earnings (₹)</label>

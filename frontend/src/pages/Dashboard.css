@@ -1168,6 +1168,7 @@
 /* ── Verify dot states ────────────────────────────────────────────────────────*/
 .db-verify-dot.unverified { background: rgba(255,255,255,0.2); }
 .db-verify-dot.reviewing  { background: rgba(220,160,40,0.9); box-shadow: 0 0 6px rgba(220,160,40,0.5); animation: verifyPulse 1.8s ease-in-out infinite; }
+.db-verify-dot.rejected   { background: rgba(220,70,70,0.9); box-shadow: 0 0 6px rgba(220,70,70,0.4); }
 
 @keyframes verifyPulse {
   0%, 100% { opacity: 1; }

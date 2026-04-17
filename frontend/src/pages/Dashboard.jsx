@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import './Dashboard.css';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage, LANGUAGES } from '../context/LanguageContext';
@@ -699,7 +700,8 @@ function PageProfile({ user }) {
     : '';
 
   const isVerified      = user?.verificationStatus === 'verified';
-  const verifStatus     = user?.verificationStatus ?? 'pending'; // pending | under_review | verified | rejected
+  const isRejected      = user?.verificationStatus === 'rejected';
+  const verifStatus     = user?.verificationStatus ?? 'pending';
   const docsSubmitted   = verifStatus === 'under_review' || verifStatus === 'verified' || verifStatus === 'rejected';
 
   return (
@@ -714,7 +716,7 @@ function PageProfile({ user }) {
           <div className="db-profile-badges">
             {isVerified
               ? <span className="db-badge-verified"><CheckCircle2 size={11} /> Verified</span>
-              : <span className="db-badge-unverified"><Clock size={11} /> {verifStatus === 'under_review' ? 'Under Review' : 'Unverified'}</span>
+              : <span className="db-badge-unverified"><Clock size={11} /> {verifStatus === 'under_review' ? 'Under Review' : isRejected ? 'Rejected' : 'Unverified'}</span>
             }
             <span className="db-badge-plan"><Zap size={11} /> {plan}</span>
             <span className="db-badge-member"><Calendar size={11} /> Since {memberSince}</span>
@@ -760,21 +762,21 @@ function PageProfile({ user }) {
             <div className="db-verification-list">
               {/* Documents — only shown as verified if verificationStatus is 'verified' */}
               <div className="db-verify-row">
-                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
+                <div className={`db-verify-dot ${isVerified ? 'verified' : isRejected ? 'rejected' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
                 <div>
                   <span className="db-verify-label">Identity Document</span>
                   <span className="db-verify-sub">
-                    {isVerified ? 'Aadhaar verified' : docsSubmitted ? 'Under verification' : 'Not submitted'}
+                    {isVerified ? 'Aadhaar verified' : isRejected ? 'Rejected — re-upload required' : docsSubmitted ? 'Under verification' : 'Not submitted'}
                   </span>
                 </div>
                 {isVerified && <CheckCircle2 size={14} className="db-verify-check" />}
               </div>
               <div className="db-verify-row">
-                <div className={`db-verify-dot ${isVerified ? 'verified' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
+                <div className={`db-verify-dot ${isVerified ? 'verified' : isRejected ? 'rejected' : docsSubmitted ? 'reviewing' : 'unverified'}`} />
                 <div>
                   <span className="db-verify-label">Platform Proof</span>
                   <span className="db-verify-sub">
-                    {isVerified ? `${platform} partner confirmed` : docsSubmitted ? 'Under verification' : 'Not submitted'}
+                    {isVerified ? `${platform} partner confirmed` : isRejected ? 'Rejected — re-upload required' : docsSubmitted ? 'Under verification' : 'Not submitted'}
                   </span>
                 </div>
                 {isVerified && <CheckCircle2 size={14} className="db-verify-check" />}
@@ -929,7 +931,7 @@ function PageSettings({ user }) {
 // MAIN DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const navigate = useNavigate();
   const [active, setActive]               = useState('dashboard');
   const [sidebarOpen, setSidebarOpen]     = useState(false);
@@ -948,18 +950,59 @@ export default function Dashboard() {
       .finally(() => setWeatherLoading(false));
   }, []);
 
-  // Fetch notifications on mount and poll every 60s
+  // Poll /auth/me every 30s to keep verificationStatus and other user fields fresh
+  useEffect(() => {
+    const refreshUser = () => {
+      axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true })
+        .then(r => setUser(r.data))
+        .catch(() => {});
+    };
+    const interval = setInterval(refreshUser, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch notifications on mount and poll every 30s
+  // Show toast + refresh user when a new verification notification arrives
+  const prevUnreadRef = useRef(0);
   useEffect(() => {
     const fetchNotifs = () => {
       axios.get('https://coveer-backend.onrender.com/notifications', { withCredentials: true })
         .then(res => {
-          setNotifications(res.data.notifications);
-          setUnreadCount(res.data.unreadCount);
+          const notifs = res.data.notifications || [];
+          const unread = res.data.unreadCount || 0;
+
+          if (unread > prevUnreadRef.current) {
+            const newNotifs = notifs.filter(n => !n.read);
+            newNotifs.forEach(n => {
+              const title = n.title || '';
+              if (title.includes('Verified') || title.includes('Verification') || title.includes('Failed')) {
+                // Refresh user data so verificationStatus updates immediately
+                axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true })
+                  .then(r => setUser(r.data))
+                  .catch(() => {});
+
+                toast(
+                  <div>
+                    <strong style={{ display: 'block', marginBottom: '0.2rem' }}>{title}</strong>
+                    <span style={{ fontSize: '0.82rem', opacity: 0.8 }}>{n.message}</span>
+                  </div>,
+                  {
+                    type: title.includes('✅') ? 'success' : title.includes('❌') ? 'error' : 'info',
+                    autoClose: 8000,
+                  }
+                );
+              }
+            });
+          }
+
+          prevUnreadRef.current = unread;
+          setNotifications(notifs);
+          setUnreadCount(unread);
         })
         .catch(() => {});
     };
     fetchNotifs();
-    const interval = setInterval(fetchNotifs, 60000);
+    const interval = setInterval(fetchNotifs, 30000);
     return () => clearInterval(interval);
   }, []);
 

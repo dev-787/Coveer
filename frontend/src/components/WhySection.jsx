@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import './WhySection.css';
+import { SectionPill } from './SectionPill';
 
 const COVEER_FEATURES = [
   'Zero claims — ever',
@@ -39,6 +40,7 @@ export const WhySection = () => {
       {/* Ambient glow behind left card */}
       <div className="ws-glow" />
 
+      <SectionPill label="Features" />
       {/* Headline */}
       <h2 className="ws-headline">
         Why gig workers<br />

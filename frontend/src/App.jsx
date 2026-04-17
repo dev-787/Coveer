@@ -6,6 +6,7 @@ import { HowItWorks } from './components/HowItWorks'
 import { WhySection } from './components/WhySection'
 import { Pricing } from './components/Pricing'
 import { Support } from './components/Support'
+import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
 import Login     from './pages/Login'
 import Start     from './pages/Start'
@@ -34,7 +35,7 @@ function Layout() {
       {!hideNav && <Navbar />}
       <Routes>
         {/* Public */}
-        <Route path="/" element={<><Hero /><HowItWorks /><WhySection /><Pricing /><Support /></>} />
+        <Route path="/" element={<><Hero /><HowItWorks /><WhySection /><Pricing /><Support /><Footer /></>} />
         <Route path="/auth"       element={!user ? <Login />  : <Navigate to="/dashboard" replace />} />
         <Route path="/auth/start" element={!user ? <Start />  : <Navigate to="/dashboard" replace />} />
         <Route path="/verify"     element={<Verify />} />

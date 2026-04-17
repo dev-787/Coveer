@@ -31,6 +31,6 @@ const docUpload = upload.fields([
 
 router.post('/upload',              authUser, docUpload, uploadDocuments);
 router.get('/status',               authUser, getVerificationStatus);
-router.patch('/admin/update-status',          updateVerificationStatus);
+router.patch('/admin/update-status', authUser, updateVerificationStatus);
 
 module.exports = router;

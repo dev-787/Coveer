@@ -254,7 +254,7 @@ const fieldProps = { formData, errors, focused, handleChange, setFocused };
       )}
 
       {!success && (
-      <div className="sf-card">
+      <div className={`sf-card ${step === 3 ? 'sf-card--wide' : ''}`}>
 
         {/* Brand */}
         <div className="sf-brand">

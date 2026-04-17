@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Check, ArrowRight, Zap, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Pricing.css';
+import { SectionPill } from './SectionPill';
 
 // ── Pricing logic ─────────────────────────────────────────────────────────────
 // Earnings range we care about: ₹300/day (low) → ₹2000/day (high)
@@ -73,8 +74,9 @@ export function Pricing() {
   }, []);
 
   return (
-    <section className="pr-section" ref={sectionRef}>
+    <section className="pr-section" ref={sectionRef} id="pricing">
 
+      <SectionPill label="Pricing" />
       {/* Headline */}
       <h2 className="pr-headline">
         Simple, honest <span className="pr-gradient">pricing</span>.

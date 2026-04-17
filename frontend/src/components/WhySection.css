@@ -7,6 +7,9 @@
   padding: 8rem 8vw;
   font-family: 'Bricolage Grotesque', sans-serif;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Ambient glow — disabled */

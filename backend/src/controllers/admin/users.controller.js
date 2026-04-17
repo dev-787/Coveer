@@ -1,6 +1,6 @@
 const User = require('../../models/user.model');
 
-const ALLOWED_FIELDS = ['city', 'plan', 'planStatus', 'dailyEarnings', 'autoRenew', 'trustScore', 'verificationStatus'];
+const ALLOWED_FIELDS = ['city', 'plan', 'planStatus', 'dailyEarnings', 'autoRenew', 'trustScore', 'verificationStatus', 'verificationRejectionReason'];
 
 exports.listUsers = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ exports.listUsers = async (req, res) => {
     const skip  = (Number(page) - 1) * Number(limit);
     const total = await User.countDocuments(filter);
     const users = await User.find(filter)
-      .select('-password -adminLogs -transactions -verificationDocuments')
+      .select('-password -adminLogs -transactions')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
@@ -67,6 +67,11 @@ exports.updateUser = async (req, res) => {
         });
         user[field] = req.body[field];
       }
+    }
+
+    // Keep isVerified in sync with verificationStatus
+    if (req.body.verificationStatus !== undefined) {
+      user.isVerified = req.body.verificationStatus === 'verified';
     }
 
     if (logs.length) user.adminLogs.push(...logs);

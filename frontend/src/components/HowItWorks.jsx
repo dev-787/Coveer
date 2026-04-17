@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './HowItWorks.css';
+import { SectionPill } from './SectionPill';
 
 import loginImg   from '../assets/login.png';
 import watchImg   from '../assets/watching.png';
@@ -151,10 +152,11 @@ export function HowItWorks() {
   }, []);
 
   return (
-    <section className="hiw-section">
+    <section className="hiw-section" id="features">
 
       {/* Section headline */}
       <div className="hiw-headline-block">
+        <SectionPill label="The Process" />
         <h2 className="hiw-headline">
           How <span className="hiw-headline-gradient">Coveer</span> works.
         </h2>

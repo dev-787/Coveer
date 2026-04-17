@@ -1,0 +1,23 @@
+.sp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 0.35rem 1rem 0.35rem 0.75rem;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 1.5rem;
+  /* center within any flex/block parent */
+  align-self: center;
+}
+
+.sp-pill-icon {
+  color: rgba(123, 121, 196, 0.8);
+  flex-shrink: 0;
+}

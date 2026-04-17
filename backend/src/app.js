@@ -14,6 +14,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://coveer.vercel.app',
+        'http://localhost:5174',
     ],
     credentials: true
 }));
@@ -27,6 +28,9 @@ app.use('/verify',   verificationRoutes);
 app.use('/weather',  weatherRoutes);
 app.use('/payments',      paymentRoutes);
 app.use('/notifications', notificationRoutes);
+
+// Admin
+app.use('/admin', require('./routes/admin/index'));
 
 // Health check
 app.get('/', (req, res) => {

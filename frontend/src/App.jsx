@@ -11,13 +11,17 @@ import Login     from './pages/Login'
 import Start     from './pages/Start'
 import Verify    from './pages/Verify'
 import Dashboard from './pages/Dashboard'
+import AdminLogin from './admin/pages/AdminLogin'
+import AdminLayout from './admin/components/AdminLayout'
+import { AdminAuthProvider } from './admin/context/AdminAuthContext'
+import { AdminProtectedRoute } from './admin/components/AdminProtectedRoute'
 
 const NAV_HIDDEN = ['/auth', '/auth/start', '/dashboard', '/verify'];
 
 function Layout() {
   const location = useLocation();
   const { user, loading } = useAuth();
-  const hideNav = NAV_HIDDEN.includes(location.pathname);
+  const hideNav = NAV_HIDDEN.includes(location.pathname) || location.pathname.startsWith('/admin');
 
   if (loading) return (
     <div className="db-loading-screen">
@@ -40,6 +44,14 @@ function Layout() {
           <ProtectedRoute><Dashboard /></ProtectedRoute>
         } />
 
+        {/* Admin */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/*" element={
+          <AdminProtectedRoute>
+            <AdminLayout />
+          </AdminProtectedRoute>
+        } />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -48,5 +60,9 @@ function Layout() {
 }
 
 export default function App() {
-  return <Layout />;
+  return (
+    <AdminAuthProvider>
+      <Layout />
+    </AdminAuthProvider>
+  );
 }

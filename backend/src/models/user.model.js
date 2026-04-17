@@ -111,6 +111,21 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    // ── Admin ──────────────────────────────────────────────────────────────────
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    adminLogs: [
+      {
+        field:     { type: String },
+        oldValue:  { type: mongoose.Schema.Types.Mixed },
+        newValue:  { type: mongoose.Schema.Types.Mixed },
+        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+        changedAt: { type: Date, default: Date.now },
+      }
+    ],
   },
   {
     timestamps: true,

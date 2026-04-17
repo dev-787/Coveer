@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage, LANGUAGES } from '../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
 import {
   LayoutDashboard, Wallet, Shield, User, Settings,
   CloudRain, Wind, Thermometer,
@@ -15,21 +15,21 @@ import {
 
 // ── Product-defined parametric thresholds (not from API) ──────────────────────
 const COVERAGE_TRIGGERS = [
-  { label: 'Rainfall > 2.5mm/hr',  impact: '30%',  type: 'Light Rain'    },
-  { label: 'Rainfall > 7.5mm/hr',  impact: '60%',  type: 'Heavy Rain'    },
-  { label: 'Rainfall > 15mm/hr',   impact: '100%', type: 'Extreme Rain'  },
-  { label: 'AQI 201–300',          impact: '30%',  type: 'Unhealthy Air' },
-  { label: 'AQI > 300',            impact: '60%',  type: 'Hazardous Air' },
-  { label: 'Temperature > 42°C',   impact: '50%',  type: 'Heatwave'      },
-  { label: 'Local Curfew',         impact: '100%', type: 'Disruption'    },
+  { label: 'Rainfall > 2.5mm/hr', impact: '30%', type: 'Light Rain' },
+  { label: 'Rainfall > 7.5mm/hr', impact: '60%', type: 'Heavy Rain' },
+  { label: 'Rainfall > 15mm/hr', impact: '100%', type: 'Extreme Rain' },
+  { label: 'AQI 201–300', impact: '30%', type: 'Unhealthy Air' },
+  { label: 'AQI > 300', impact: '60%', type: 'Hazardous Air' },
+  { label: 'Temperature > 42°C', impact: '50%', type: 'Heatwave' },
+  { label: 'Local Curfew', impact: '100%', type: 'Disruption' },
 ];
 
 const NAV = [
-  { id: 'dashboard', label: 'Dashboard',   icon: LayoutDashboard },
-  { id: 'wallet',    label: 'Wallet',      icon: Wallet          },
-  { id: 'coverage',  label: 'My Coverage', icon: Shield          },
-  { id: 'profile',   label: 'Profile',     icon: User            },
-  { id: 'settings',  label: 'Settings',    icon: Settings        },
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'wallet', label: 'Wallet', icon: Wallet },
+  { id: 'coverage', label: 'My Coverage', icon: Shield },
+  { id: 'profile', label: 'Profile', icon: User },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 const fmt = (n) => new Intl.NumberFormat('en-IN').format(Math.abs(n));
@@ -39,18 +39,18 @@ const fmt = (n) => new Intl.NumberFormat('en-IN').format(Math.abs(n));
 // ─────────────────────────────────────────────────────────────────────────────
 function PageDashboard({ user, weather, weatherLoading }) {
   const { t } = useLanguage();
-  const firstName     = user?.fullName?.firstName ?? '';
-  const city          = user?.city ?? '';
-  const plan          = user?.plan ?? 'basic';
+  const firstName = user?.fullName?.firstName ?? '';
+  const city = user?.city ?? '';
+  const plan = user?.plan ?? 'basic';
   const dailyEarnings = user?.dailyEarnings ?? 0;
   const walletBalance = user?.wallet?.balance ?? 0;
-  const trustScore    = user?.trustScore ?? 100;
-  const maxPayout     = plan === 'premium' ? 1000 : 600;
-  const hourlyIncome  = Math.round(dailyEarnings / 8);
+  const trustScore = user?.trustScore ?? 100;
+  const maxPayout = plan === 'premium' ? 1000 : 600;
+  const hourlyIncome = Math.round(dailyEarnings / 8);
 
-  const isAffected   = weather?.impact?.isAffected ?? false;
+  const isAffected = weather?.impact?.isAffected ?? false;
   const impactReason = weather?.impact?.reason ?? 'Normal';
-  const estPayout    = Math.min(weather?.impact?.estimatedHourlyPayout ?? 0, maxPayout);
+  const estPayout = Math.min(weather?.impact?.estimatedHourlyPayout ?? 0, maxPayout);
 
   // Fetch last 7 days of transactions
   const [recentTxns, setRecentTxns] = useState([]);
@@ -70,8 +70,8 @@ function PageDashboard({ user, weather, weatherLoading }) {
   }, []);
 
   const txnIcon = (type) => {
-    if (type === 'payout')     return CloudRain;
-    if (type === 'premium')    return Shield;
+    if (type === 'payout') return CloudRain;
+    if (type === 'premium') return Shield;
     if (type === 'withdrawal') return ArrowUpRight;
     return IndianRupee;
   };
@@ -133,7 +133,7 @@ function PageDashboard({ user, weather, weatherLoading }) {
           </div>
           {txnLoading ? (
             <div className="db-txn-list">
-              {[1,2,3].map(i => <div key={i} className="db-skeleton" style={{ height: '44px', borderRadius: '8px' }} />)}
+              {[1, 2, 3].map(i => <div key={i} className="db-skeleton" style={{ height: '44px', borderRadius: '8px' }} />)}
             </div>
           ) : recentTxns.length === 0 ? (
             <div className="db-empty-state">
@@ -143,7 +143,7 @@ function PageDashboard({ user, weather, weatherLoading }) {
           ) : (
             <div className="db-txn-list">
               {recentTxns.map((txn, i) => {
-                const Icon     = txnIcon(txn.type);
+                const Icon = txnIcon(txn.type);
                 const isCredit = txn.type === 'payout' || txn.type === 'credit';
                 return (
                   <div key={i} className="db-txn-row">
@@ -180,7 +180,7 @@ function PageDashboard({ user, weather, weatherLoading }) {
           </div>
           <div className="db-conditions">
             {weatherLoading ? (
-              [1,2,3].map(i => <div key={i} className="db-condition-row db-skeleton" style={{ height: '48px' }} />)
+              [1, 2, 3].map(i => <div key={i} className="db-condition-row db-skeleton" style={{ height: '48px' }} />)
             ) : weather ? (
               <>
                 <div className="db-condition-row">
@@ -283,20 +283,20 @@ function PageWallet({ user }) {
     );
   }
 
-  const [walletData, setWalletData]       = useState(null);
+  const [walletData, setWalletData] = useState(null);
   const [walletLoading, setWalletLoading] = useState(true);
   const [walletBalance, setWalletBalance] = useState(0);
-  const [planStatus, setPlanStatus]       = useState('inactive');
+  const [planStatus, setPlanStatus] = useState('inactive');
 
   // Add funds state
-  const [addFundsMode, setAddFundsMode]   = useState(false);
-  const [addAmount, setAddAmount]         = useState('');
-  const [addSuccess, setAddSuccess]       = useState(false);
+  const [addFundsMode, setAddFundsMode] = useState(false);
+  const [addAmount, setAddAmount] = useState('');
+  const [addSuccess, setAddSuccess] = useState(false);
 
   // Withdraw state
-  const [withdrawMode, setWithdrawMode]   = useState(false);
+  const [withdrawMode, setWithdrawMode] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
-  const [upiId, setUpiId]                 = useState('');
+  const [upiId, setUpiId] = useState('');
   const [withdrawSuccess, setWithdrawSuccess] = useState(false);
 
   useEffect(() => {
@@ -322,20 +322,20 @@ function PageWallet({ user }) {
       const { orderId, amount, currency, keyId } = orderRes.data;
 
       const options = {
-        key:         keyId,
+        key: keyId,
         amount,
         currency,
-        name:        'Coveer',
+        name: 'Coveer',
         description: 'Wallet Top-up',
-        order_id:    orderId,
+        order_id: orderId,
         handler: async (response) => {
           try {
             const verifyRes = await axios.post(
               'https://coveer-backend.onrender.com/payments/add-funds/verify',
               {
-                razorpay_order_id:   response.razorpay_order_id,
+                razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature:  response.razorpay_signature,
+                razorpay_signature: response.razorpay_signature,
                 amount,
               },
               { withCredentials: true }
@@ -351,13 +351,13 @@ function PageWallet({ user }) {
           }
         },
         prefill: {
-          name:  `${user?.fullName?.firstName} ${user?.fullName?.lastName}`,
+          name: `${user?.fullName?.firstName} ${user?.fullName?.lastName}`,
           email: user?.email,
         },
         config: {
           display: {
             blocks: {
-              upi:  { name: 'Pay via UPI', instruments: [{ method: 'upi' }] },
+              upi: { name: 'Pay via UPI', instruments: [{ method: 'upi' }] },
               card: { name: 'Pay via Card', instruments: [{ method: 'card' }] },
             },
             sequence: ['block.upi', 'block.card'],
@@ -403,18 +403,18 @@ function PageWallet({ user }) {
     }
   };
 
-  const plan        = walletData?.plan ?? user?.plan ?? 'basic';
-  const planCost    = plan === 'premium' ? 40 : 25;
-  const planExpiry  = walletData?.planExpiresAt
+  const plan = walletData?.plan ?? user?.plan ?? 'basic';
+  const planCost = plan === 'premium' ? 40 : 25;
+  const planExpiry = walletData?.planExpiresAt
     ? new Date(walletData.planExpiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
     : null;
-  const txns        = walletData?.transactions ?? [];
+  const txns = walletData?.transactions ?? [];
 
   const txnIcon = (type) => {
-    if (type === 'payout')     return CloudRain;
-    if (type === 'premium')    return Shield;
+    if (type === 'payout') return CloudRain;
+    if (type === 'premium') return Shield;
     if (type === 'withdrawal') return ArrowUpRight;
-    if (type === 'credit')     return ArrowUpRight;
+    if (type === 'credit') return ArrowUpRight;
     return IndianRupee;
   };
 
@@ -535,7 +535,7 @@ function PageWallet({ user }) {
           {txns.length > 0 && <span className="db-panel-sub">{txns.length} transactions</span>}
         </div>
         {walletLoading ? (
-          [1,2,3].map(i => <div key={i} className="db-skeleton" style={{ height: '52px', borderRadius: '8px' }} />)
+          [1, 2, 3].map(i => <div key={i} className="db-skeleton" style={{ height: '52px', borderRadius: '8px' }} />)
         ) : txns.length === 0 ? (
           <div className="db-empty-state" style={{ padding: '3rem 1rem' }}>
             <IndianRupee size={28} color="rgba(123,121,196,0.25)" />
@@ -576,15 +576,15 @@ function PageWallet({ user }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function PageCoverage({ user }) {
   const [autoRenew, setAutoRenew] = useState(user?.autoRenew ?? true);
-  const plan        = user?.plan ?? 'basic';
-  const isVerified  = user?.verificationStatus === 'verified';
+  const plan = user?.plan ?? 'basic';
+  const isVerified = user?.verificationStatus === 'verified';
   const verifStatus = user?.verificationStatus ?? 'pending';
-  const city        = user?.city ?? '';
-  const platform    = user?.platform ?? '';
+  const city = user?.city ?? '';
+  const platform = user?.platform ?? '';
   const memberSince = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
     : '';
-  const maxPayout   = plan === 'premium' ? 1000 : 600;
+  const maxPayout = plan === 'premium' ? 1000 : 600;
   const weeklyPrice = plan === 'premium' ? 40 : 25;
 
   return (
@@ -684,25 +684,25 @@ function PageCoverage({ user }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function PageProfile({ user }) {
   const { logout } = useAuth();
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [earnings, setEarnings] = useState(user?.dailyEarnings ?? 0);
 
-  const firstName   = user?.fullName?.firstName ?? '';
-  const lastName    = user?.fullName?.lastName ?? '';
-  const fullName    = `${firstName} ${lastName}`.trim();
-  const platform    = user?.platform ?? '';
-  const city        = user?.city ?? '';
-  const plan        = user?.plan ?? 'basic';
-  const trustScore  = user?.trustScore ?? 100;
+  const firstName = user?.fullName?.firstName ?? '';
+  const lastName = user?.fullName?.lastName ?? '';
+  const fullName = `${firstName} ${lastName}`.trim();
+  const platform = user?.platform ?? '';
+  const city = user?.city ?? '';
+  const plan = user?.plan ?? 'basic';
+  const trustScore = user?.trustScore ?? 100;
   const memberSince = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
     : '';
 
-  const isVerified      = user?.verificationStatus === 'verified';
-  const isRejected      = user?.verificationStatus === 'rejected';
-  const verifStatus     = user?.verificationStatus ?? 'pending';
-  const docsSubmitted   = verifStatus === 'under_review' || verifStatus === 'verified' || verifStatus === 'rejected';
+  const isVerified = user?.verificationStatus === 'verified';
+  const isRejected = user?.verificationStatus === 'rejected';
+  const verifStatus = user?.verificationStatus ?? 'pending';
+  const docsSubmitted = verifStatus === 'under_review' || verifStatus === 'verified' || verifStatus === 'rejected';
 
   return (
     <div className="db-page">
@@ -734,9 +734,9 @@ function PageProfile({ user }) {
           </div>
           <div className="db-profile-fields">
             {[
-              { label: 'Full Name',    value: fullName    },
-              { label: 'Platform',     value: platform    },
-              { label: 'Primary City', value: city        },
+              { label: 'Full Name', value: fullName },
+              { label: 'Platform', value: platform },
+              { label: 'Primary City', value: city },
               { label: 'Member Since', value: memberSince },
             ].map((f, i) => (
               <div key={i} className="db-profile-field">
@@ -819,19 +819,18 @@ function PageProfile({ user }) {
 // PAGE: SETTINGS
 // ─────────────────────────────────────────────────────────────────────────────
 const PLAN_OPTIONS = [
-  { id: 'basic',   name: 'Basic',   price: '₹25/week', maxPayout: '₹600/day',   features: ['Weather protection', 'AQI alerts', 'Hourly payouts'] },
+  { id: 'basic', name: 'Basic', price: '₹25/week', maxPayout: '₹600/day', features: ['Weather protection', 'AQI alerts', 'Hourly payouts'] },
   { id: 'premium', name: 'Premium', price: '₹40/week', maxPayout: '₹1,000/day', features: ['Everything in Basic', 'Priority payouts', 'Curfew & disruption cover'], recommended: true },
 ];
 
 function PageSettings({ user }) {
-  const { lang, setLanguage } = useLanguage();
   const { setUser } = useAuth();
   const [planLoading, setPlanLoading] = useState(false);
-  const [planMsg, setPlanMsg]         = useState('');
+  const [planMsg, setPlanMsg] = useState('');
   const [planMsgType, setPlanMsgType] = useState('info');
 
   const currentPlan = user?.plan ?? 'basic';
-  const planStatus  = user?.planStatus ?? 'inactive';
+  const planStatus = user?.planStatus ?? 'inactive';
 
   const handleChangePlan = async (planId) => {
     if (planId === currentPlan) return;
@@ -853,29 +852,6 @@ function PageSettings({ user }) {
 
   return (
     <div className="db-page">
-
-      {/* Language */}
-      <div className="db-panel">
-        <div className="db-panel-header">
-          <span className="db-panel-title">Language</span>
-          <span className="db-panel-sub">App display language</span>
-        </div>
-        <div className="db-settings-grid">
-          {LANGUAGES.map(l => (
-            <button
-              key={l.code}
-              className={`db-settings-option ${lang === l.code ? 'db-settings-option--active' : ''}`}
-              onClick={() => setLanguage(l.code)}
-            >
-              {lang === l.code && <CheckCircle2 size={13} />}
-              {l.label}
-            </button>
-          ))}
-        </div>
-        <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.2)', marginTop: '0.25rem' }}>
-          Full translation coming soon. Currently affects date/number formatting.
-        </p>
-      </div>
 
       {/* Plan */}
       <div className="db-panel">
@@ -933,15 +909,15 @@ function PageSettings({ user }) {
 export default function Dashboard() {
   const { user, logout, setUser } = useAuth();
   const navigate = useNavigate();
-  const [active, setActive]               = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen]     = useState(false);
-  const [weather, setWeather]             = useState(null);
+  const [active, setActive] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
 
   // Notifications
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount]     = useState(0);
-  const [bellOpen, setBellOpen]           = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [bellOpen, setBellOpen] = useState(false);
 
   useEffect(() => {
     axios.get('https://coveer-backend.onrender.com/weather/current', { withCredentials: true })
@@ -955,7 +931,7 @@ export default function Dashboard() {
     const refreshUser = () => {
       axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true })
         .then(r => setUser(r.data))
-        .catch(() => {});
+        .catch(() => { });
     };
     const interval = setInterval(refreshUser, 30000);
     return () => clearInterval(interval);
@@ -979,7 +955,7 @@ export default function Dashboard() {
                 // Refresh user data so verificationStatus updates immediately
                 axios.get('https://coveer-backend.onrender.com/auth/me', { withCredentials: true })
                   .then(r => setUser(r.data))
-                  .catch(() => {});
+                  .catch(() => { });
 
                 toast(
                   <div>
@@ -999,7 +975,7 @@ export default function Dashboard() {
           setNotifications(notifs);
           setUnreadCount(unread);
         })
-        .catch(() => {});
+        .catch(() => { });
     };
     fetchNotifs();
     const interval = setInterval(fetchNotifs, 30000);
@@ -1010,7 +986,7 @@ export default function Dashboard() {
     setBellOpen(v => !v);
     if (!bellOpen && unreadCount > 0) {
       // Mark all read
-      await axios.patch('https://coveer-backend.onrender.com/notifications/read-all', {}, { withCredentials: true }).catch(() => {});
+      await axios.patch('https://coveer-backend.onrender.com/notifications/read-all', {}, { withCredentials: true }).catch(() => { });
       setUnreadCount(0);
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     }
@@ -1018,17 +994,17 @@ export default function Dashboard() {
 
   const notifIcon = (type) => {
     if (type === 'weather') return '🌦️';
-    if (type === 'payout')  return '💰';
-    if (type === 'debit')   return '💸';
-    if (type === 'plan')    return '🛡️';
+    if (type === 'payout') return '💰';
+    if (type === 'debit') return '💸';
+    if (type === 'plan') return '🛡️';
     return 'ℹ️';
   };
 
-  const firstName    = user?.fullName?.firstName ?? '';
-  const lastName     = user?.fullName?.lastName  ?? '';
-  const city         = user?.city  ?? '';
-  const plan         = user?.plan  ?? 'basic';
-  const isAffected   = weather?.impact?.isAffected ?? false;
+  const firstName = user?.fullName?.firstName ?? '';
+  const lastName = user?.fullName?.lastName ?? '';
+  const city = user?.city ?? '';
+  const plan = user?.plan ?? 'basic';
+  const isAffected = weather?.impact?.isAffected ?? false;
   const impactReason = weather?.impact?.reason ?? 'Normal';
 
   const { t } = useLanguage();
@@ -1039,10 +1015,10 @@ export default function Dashboard() {
 
   const pages = {
     dashboard: <PageDashboard user={user} weather={weather} weatherLoading={weatherLoading} />,
-    wallet:    <PageWallet    user={user} />,
-    coverage:  <PageCoverage  user={user} />,
-    profile:   <PageProfile   user={user} />,
-    settings:  <PageSettings  user={user} />,
+    wallet: <PageWallet user={user} />,
+    coverage: <PageCoverage user={user} />,
+    profile: <PageProfile user={user} />,
+    settings: <PageSettings user={user} />,
   };
 
   return (

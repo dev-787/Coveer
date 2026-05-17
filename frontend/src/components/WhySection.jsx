@@ -42,11 +42,11 @@ export const WhySection = () => {
 
       <SectionPill label="Features" />
       {/* Headline */}
-      <h2 className="ws-headline">
+      <h2 className={`ws-headline ${animated ? 'ws-text-visible' : ''}`}>
         Why gig workers<br />
         choose <span className="ws-gradient">Coveer</span>.
       </h2>
-      <p className="ws-sub">
+      <p className={`ws-sub ${animated ? 'ws-text-visible' : ''}`}>
         No forms. No calls. No waiting. Just automatic protection.
       </p>
 

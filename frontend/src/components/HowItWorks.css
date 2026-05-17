@@ -21,6 +21,35 @@
   align-items: center;
 }
 
+/* Entry animation — children fade+slide up on scroll */
+.hiw-headline-block .sp-pill {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: 0s;
+}
+
+.hiw-headline-block .hiw-headline {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition-delay: 0.12s;
+}
+
+.hiw-headline-block .hiw-headline-sub {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: 0.26s;
+}
+
+.hiw-headline-visible .sp-pill,
+.hiw-headline-visible .hiw-headline,
+.hiw-headline-visible .hiw-headline-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .hiw-headline {
   font-size: clamp(3rem, 7vw, 6rem);
   font-weight: 700;
@@ -208,6 +237,10 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(123,121,196,0.6);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: 0.05s;
 }
 
 .hiw-step-title {
@@ -217,6 +250,10 @@
   line-height: 1.05;
   color: #f0f0f2;
   margin: 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: 0.15s;
 }
 
 .hiw-title-line   { display: block; }
@@ -237,6 +274,10 @@
   font-weight: 400;
   letter-spacing: 0.01em;
   margin: 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: 0.28s;
 }
 
 .hiw-bullets {
@@ -255,6 +296,22 @@
   font-size: 0.9rem;
   color: rgba(255,255,255,0.55);
   font-weight: 400;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.hiw-bullet:nth-child(1) { transition-delay: 0.38s; }
+.hiw-bullet:nth-child(2) { transition-delay: 0.46s; }
+.hiw-bullet:nth-child(3) { transition-delay: 0.54s; }
+
+/* Animate in when step becomes active */
+.hiw-step--active .hiw-step-num,
+.hiw-step--active .hiw-step-title,
+.hiw-step--active .hiw-step-desc,
+.hiw-step--active .hiw-bullet {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hiw-bullet-dot {

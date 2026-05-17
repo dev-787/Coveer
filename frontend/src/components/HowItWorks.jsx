@@ -131,31 +131,43 @@ function Connector({ fromAlign }) {
 }
 
 export function HowItWorks() {
-  const stepRefs = useRef([]);
-  const [activeSteps, setActiveSteps] = useState(() => STEPS.map(() => false));
+  const stepRefs    = useRef([]);
+  const headlineRef = useRef(null);
+  const [activeSteps, setActiveSteps]       = useState(() => STEPS.map(() => false));
+  const [headlineVisible, setHeadlineVisible] = useState(false);
+
+  useEffect(() => {
+    const headlineObserver = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeadlineVisible(true); },
+      { threshold: 0, rootMargin: '0px 0px -120px 0px' }
+    );
+    if (headlineRef.current) headlineObserver.observe(headlineRef.current);
+    return () => headlineObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const windowH = window.innerHeight;
       setActiveSteps(prev => prev.map((already, i) => {
-        if (already) return true; // never un-activate
+        if (already) return true;
         const el = stepRefs.current[i];
         if (!el) return false;
         const rect = el.getBoundingClientRect();
-        return rect.top < windowH * 0.75;
+        return rect.top < windowH * 0.78;
       }));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Small delay on mount so CSS transitions have time to register before first check
+    const t = setTimeout(handleScroll, 100);
+    return () => { window.removeEventListener('scroll', handleScroll); clearTimeout(t); };
   }, []);
 
   return (
     <section className="hiw-section" id="features">
 
       {/* Section headline */}
-      <div className="hiw-headline-block">
+      <div className={`hiw-headline-block ${headlineVisible ? 'hiw-headline-visible' : ''}`} ref={headlineRef}>
         <SectionPill label="The Process" />
         <h2 className="hiw-headline">
           How <span className="hiw-headline-gradient">Coveer</span> works.

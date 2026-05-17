@@ -78,10 +78,10 @@ export function Pricing() {
 
       <SectionPill label="Pricing" />
       {/* Headline */}
-      <h2 className="pr-headline">
+      <h2 className={`pr-headline ${animated ? 'pr-text-visible' : ''}`}>
         Simple, honest <span className="pr-gradient">pricing</span>.
       </h2>
-      <p className="pr-sub">
+      <p className={`pr-sub ${animated ? 'pr-text-visible' : ''}`}>
         Enter your daily earnings to see your personalised plan and payout.
       </p>
 

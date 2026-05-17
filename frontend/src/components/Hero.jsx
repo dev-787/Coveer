@@ -13,10 +13,10 @@ export function Hero() {
 
   return (
     <div className="hero-container">
-      <img src={img1} className="corner-img corner-top-left"     alt="" />
-      <img src={img2} className="corner-img corner-top-right"    alt="" />
-      <img src={img3} className="corner-img corner-bottom-left"  alt="" />
-      <img src={img4} className="corner-img corner-bottom-right" alt="" />
+      <img src={img1} className="corner-img corner-top-left"     alt="" loading="eager" />
+      <img src={img2} className="corner-img corner-top-right"    alt="" loading="eager" />
+      <img src={img3} className="corner-img corner-bottom-left"  alt="" loading="lazy" />
+      <img src={img4} className="corner-img corner-bottom-right" alt="" loading="lazy" />
 
       <div className="badge-container">
         <div className="badge">

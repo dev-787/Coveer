@@ -41,6 +41,7 @@ export function PlatformStrip() {
                 alt={p.name}
                 className="ps-logo"
                 draggable={false}
+                loading="lazy"
               />
             </div>
           ))}

@@ -188,6 +188,7 @@ export function HowItWorks() {
                     alt={step.alt}
                     className="hiw-img"
                     draggable={false}
+                    loading="lazy"
                   />
                   <div className="hiw-img-glow" />
                 </div>

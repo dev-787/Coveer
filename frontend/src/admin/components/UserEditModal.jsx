@@ -165,6 +165,7 @@ export default function UserEditModal({ userId, onClose, onSaved }) {
                       <a href={user.verificationDocuments.identityProof} target="_blank" rel="noreferrer"
                         style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                         <img src={user.verificationDocuments.identityProof} alt="Identity"
+                          loading="lazy"
                           style={{ width: 140, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)' }} />
                         <span style={{ fontSize: '0.68rem', color: 'rgba(123,121,196,0.8)', textAlign: 'center' }}>Identity Proof ↗</span>
                       </a>
